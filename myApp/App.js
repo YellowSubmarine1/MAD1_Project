@@ -20,6 +20,10 @@ const AppTabNav  = createBottomTabNavigator({
   Login:{
     screen: Login
   }
+  ,
+  Register:{
+    screen: Create_Account
+  }
 });
 const AppContainer = createAppContainer(AppTabNav )
 export default AppContainer;
@@ -29,3 +33,4 @@ import Profile from './screens/Profile'
 import Edit_Profile from './screens/Edit_Profile'
 import Chits from './screens/Chits'
 import Login from './screens/Login'
+import Create_Account from './screens/Create_Account'
