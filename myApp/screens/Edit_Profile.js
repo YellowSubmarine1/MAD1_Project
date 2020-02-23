@@ -59,7 +59,7 @@ class HomeScreen extends Component{
     {
       headers: {
         "Content-Type": "application/json",
-        "X-Authorization": "6df62199733141033ea36239ac0ff433"
+        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
       },
       method: 'PATCH',
       body: result

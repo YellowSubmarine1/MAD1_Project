@@ -16,6 +16,9 @@ const AppTabNav  = createBottomTabNavigator({
   },
   Chits:{
     screen: Chits
+  },
+  Login:{
+    screen: Login
   }
 });
 const AppContainer = createAppContainer(AppTabNav )
@@ -25,3 +28,4 @@ import FollowingScreen from './screens/Following'
 import Profile from './screens/Profile'
 import Edit_Profile from './screens/Edit_Profile'
 import Chits from './screens/Chits'
+import Login from './screens/Login'
