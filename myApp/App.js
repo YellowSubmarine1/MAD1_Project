@@ -11,19 +11,19 @@ const AppTabNav  = createBottomTabNavigator({
   UserProfile: {
     screen: Profile
   },
-  EditProfile:{
-    screen: Edit_Profile
-  },
-  Chits:{
-    screen: Chits
-  },
-  Login:{
-    screen: Login
-  }
-  ,
-  Register:{
-    screen: Create_Account
-  }
+//  EditProfile:{
+//    screen: Edit_Profile
+//  },
+//  Chits:{
+//    screen: Chits
+//  },
+//  Login:{
+//    screen: Login
+//  }
+//  ,
+//  Register:{
+//    screen: Create_Account
+//  }
 });
 const AppContainer = createAppContainer(AppTabNav )
 export default AppContainer;

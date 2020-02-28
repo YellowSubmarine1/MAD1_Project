@@ -28,7 +28,7 @@ class LoginScreen extends Component{
  
      console.log(result);
  
-     return fetch("http://10.0.2.2:3333/api/v0.0.4/user",
+     return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
      {
        headers: {
          "Content-Type": "application/json"

@@ -55,7 +55,7 @@ class HomeScreen extends Component{
 
     console.log(result);
 
-    return fetch("http://10.0.2.2:3333/api/v0.0.4/user/7",
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7",
     {
       headers: {
         "Content-Type": "application/json",

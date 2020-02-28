@@ -15,14 +15,14 @@ class Following extends Component{
 
       // function uses 'fetch' to call the api and return a JSON string from the server
   getData(){
-   return fetch("http://10.0.2.2:3333/api/v0.0.4/user/7/following",
-   {
-     headers: {
-       "Content-Type": "application/json",
-       "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
-     },
-     method: 'GET'
-   })
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/following",
+    {
+      headers: {
+        "Content-Type": "application/json",
+        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+      },
+      method: 'GET'
+    })
    .then((response) => response.json())
    .then((responseJson) => {
        this.setState({

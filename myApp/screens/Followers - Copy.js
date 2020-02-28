@@ -10,7 +10,6 @@ class HomeScreen extends Component{
         this.state ={
         isLoading: true,
         Followers_List:[],
-        User_Selected: []
         }
     }
 
@@ -55,36 +54,6 @@ class HomeScreen extends Component{
  //     )}
  //   />    
  // </View>
-
- // Loads the profile of the user selected
- userProfile(user)
-   {
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+user
-
-    console.log(result);
-
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+user,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
-      },
-      method: 'GET',
-    })
-    .then((response) => response.json())
-   .then((responseJson) => {
-       this.setState({
-       isLoading: false,
-       User_Selected: responseJson,
-     });
-     console.log("JSON Results:");
-     console.log(responseJson);
-   })
-   .catch((error) =>{
-   console.log(error);
-   });
-   }
-
  componentDidMount(){
    this.getData();
   } 
@@ -101,16 +70,18 @@ class HomeScreen extends Component{
         <FlatList
           data={this.state.Followers_List}
           renderItem={({item}) => ( 
+            <View style={{marginBottom: '2%', backgroundColor: 'gray', padding:'3%', flexDirection: 'column'}} >
               <View style={{backgroundColor: 'gray',flexDirection: 'row'}} >
-                <TouchableOpacity onPress={()=> this.userProfile(item.user_id)}>
+                <TouchableOpacity onPress={()=> alert('image clicked')}>
                   <Image
-                      style={{width:70, height: 70, marginTop:10, marginLeft:5}}
+                      style={{width: '24%', height: '85%', marginTop:10}}
                       source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
                     />
-                </TouchableOpacity>
+                  </TouchableOpacity>
 
-                <Text style={{marginLeft: '10%', paddingTop:'20%', fontSize:17}} > {item.given_name } {item.family_name }</Text> 
-                <Text style={{align: 'right'}} > {item.user_id }</Text> 
+              <Text style={{marginLeft: '10%', paddingTop:'20%', fontSize:17}} > {item.given_name } {item.family_name }</Text> 
+              <Text style={{alignItems: 'center'}} > {item.user_id }</Text> 
+              </View>
             </View>
           )}
       />
