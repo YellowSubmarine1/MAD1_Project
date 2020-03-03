@@ -50,7 +50,7 @@ class Following extends Component{
       )
     }
  return(
-    <View style={{flex:1, flexDirection: 'column', flexWrap:'wrap'}}>
+    <View style={{flex:1, flexDirection: 'row', flexWrap:'wrap'}}>
         <Text style={{width: 420, height: 60, backgroundColor: 'orange', fontWeight: 'bold'} }>Following</Text>
         <FlatList
         data={this.state.Following_List}

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator,FlatList, StyleSheet, Image,TouchableOpacity } from 'react-native';
-class HomeScreen extends Component{
+import { Text, View, Button,TextInput,ActivityIndicator,FlatList, StyleSheet, Image,TouchableOpacity,createBottomTabNavigator } from 'react-native';
+
+export default class HomeScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
         header: null
@@ -56,7 +57,7 @@ class HomeScreen extends Component{
  //   />    
  // </View>
 
- // Loads the profile of the user selected
+ // Loads the profile of the user selected 
  userProfile(user)
    {
     let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+user
@@ -85,6 +86,13 @@ class HomeScreen extends Component{
    });
    }
 
+   LoadScreen(user_id)
+   {
+     console.log(user_id)
+      this.props.navigation.navigate('UserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+   }
+
+   //                 <Text style={{textAlign:'center', paddingTop:'15%',marginLeft:40, fontSize:17}} > {item.given_name } {item.family_name }</Text>
  componentDidMount(){
    this.getData();
   } 
@@ -97,20 +105,22 @@ class HomeScreen extends Component{
       )
     }
  return(
-    <View style={{flexDirection: 'column', backgroundColor: 'green'} }>
+    <View style={styles.container }>
+      <Text style={styles.title }>Followers</Text>
         <FlatList
           data={this.state.Followers_List}
           renderItem={({item}) => ( 
-              <View style={{backgroundColor: 'gray',flexDirection: 'row'}} >
-                <TouchableOpacity onPress={()=> this.userProfile(item.user_id)}>
+              <View style={styles.flatListContainer} >
+                <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                  
                   <Image
-                      style={{width:70, height: 70, marginTop:10, marginLeft:5}}
+                      style={styles.profilePicture}
                       source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
                     />
                 </TouchableOpacity>
 
-                <Text style={{marginLeft: '10%', paddingTop:'20%', fontSize:17}} > {item.given_name } {item.family_name }</Text> 
-                <Text style={{align: 'right'}} > {item.user_id }</Text> 
+                <Text style={styles.userInfo} > {item.given_name } {item.family_name }</Text> 
+                <Text style={styles.userInfoID} > {item.user_id }</Text> 
             </View>
           )}
       />
@@ -118,5 +128,31 @@ class HomeScreen extends Component{
  );
  }
 }
-
-export default HomeScreen;
+const styles = StyleSheet.create({
+  container: {
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: '#d6d7da',
+    flexDirection: 'column', backgroundColor: 'green'
+  },
+  title: {
+    fontSize: 19,
+    width: '100%', height: '10%', backgroundColor: 'orange', fontWeight: 'bold', textAlign:'center',padding:12
+  },
+  activeTitle: {
+    color: 'red',
+    display: 'flex'
+  },
+  flatListContainer:{
+    backgroundColor: 'gray',flexDirection: 'row', alignItems:'flex-end',justifyContent:'space-between'
+  },
+  profilePicture:{
+    width:70, height: 70, marginTop:10, marginLeft:5
+  },
+  userInfo:{
+    textAlign:'center', paddingBottom:5
+  },
+  userInfoID:{
+    alignSelf:'flex-start', paddingTop:15, paddingRight:20
+  }
+});
