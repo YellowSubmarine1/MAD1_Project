@@ -103,43 +103,38 @@ export default class FollowersScreen extends Component{
       )
     }
  return(
-<View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
-  <SearchBar
-          ref="searchBar"
-          placeholder="Search"    
-          onChangeText={this.searchFilterFunction}
-          autoCorrect={false} 
-  />
-  <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
-    <FlatList
-      data={this.state.Followers_List}
-      renderItem={({item}) => (
-          <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5}}>
-            <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
-              <Image
-                  style={styles.profilePicture}
-                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-                />
-            </TouchableOpacity>
-            <View style={{justifyContent:'center', color:'green'}}>
-              <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
-              <Text style={{color:'gray'}}> {item.email }</Text> 
+    <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+      <SearchBar
+        placeholder="Type Here..."
+        //onChangeText={this.updateSearch}
+        //value={search}
+      />
+        <FlatList
+          data={this.state.Followers_List}
+          renderItem={({item}) => (
+              <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray'}}>
+                <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                  <Image
+                      style={styles.profilePicture}
+                      source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                    />
+                </TouchableOpacity>
+                <View style={{justifyContent:'center', color:'green'}}>
+                  <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
+                  <Text style={{color:'gray'}}> {item.email }</Text> 
+                </View>
             </View>
-        </View>
-      )}
-    />
-  </View>
-</View>
+          )}
+      />
+    </View>
  );
  }
 }
-
 const styles = StyleSheet.create({
   container: {
     borderRadius: 4,
     borderWidth: 0.5,
-    borderColor: '#d6d7da',
-    flexDirection: 'column', backgroundColor: 'green'
+    borderColor: '#d6d7da'
   },
   title: {
     fontSize: 19,
@@ -150,10 +145,11 @@ const styles = StyleSheet.create({
     display: 'flex'
   },
   flatListContainer:{
-    backgroundColor: 'gray',flexDirection: 'row', alignItems:'flex-end',justifyContent:'space-between'
+    backgroundColor: 'gray',flexDirection: 'row', alignItems:'flex-end',justifyContent:'space-between',borderBottomWidth:1, borderBottomColor: 'gray'
+    
   },
   profilePicture:{
-    width:70, height: 70, marginTop:10, marginLeft:5
+    width:60, height: 60, margin:5, borderRadius:25
   },
   userInfo:{
     textAlign:'center', paddingBottom:5
@@ -162,3 +158,24 @@ const styles = StyleSheet.create({
     alignSelf:'flex-start', paddingTop:15, paddingRight:20
   }
 });
+
+
+<FlatList
+data={this.state.recent_Chits}
+renderItem={({item}) => (
+  <View style={{borderBottomWidth:1, borderBottomColor: 'gray'}}>
+     <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:12}}>
+        <View>
+          <Text> {this.state.given_name} {this.state.family_name}</Text>
+        </View>
+        <View style={{alignItems:'center'}}>
+          <Text> 20</Text>
+          <Text style={{fontSize:10}}> {item.timestamp}</Text>
+        </View>
+  </View>
+    <Text style={{marginLeft:5}}>{this.state.given_name} {this.state.family_name}</Text>
+    <Text style={{marginLeft:5}}>{item.user_id } {item.chit_content}</Text> 
+  </View>
+)}
+keyExtractor={i => i.id}
+/>

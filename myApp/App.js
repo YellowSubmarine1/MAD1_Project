@@ -11,9 +11,9 @@ const AppTabNav  = createBottomTabNavigator({
   UserProfile: {
     screen: Profile
   },
-//  EditProfile:{
-//    screen: Edit_Profile
-//  },
+  EditProfile:{
+    screen: Edit_Profile
+  },
 //  Chits:{
 //    screen: Chits
 //  },
