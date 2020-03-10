@@ -82,7 +82,7 @@ class HomeScreen extends Component{
           <View style={{flex:3}}>
             <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:2}}>
                 <View>
-                  <Text style={{fontSize:9}}>{item.user.given_name} {item.user.family_name}</Text>
+                  <Text style={{fontSize:10, fontWeight:'bold'}}>{item.user.given_name} {item.user.family_name}</Text>
                 </View>
                 <View style={{alignItems:'center'}}>
                   <Text style={{fontSize:9}}> {item.timestamp}</Text>

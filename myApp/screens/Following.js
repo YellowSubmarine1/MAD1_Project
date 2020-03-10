@@ -67,9 +67,10 @@ UnFollow(user_id){
 
   LoadScreen(user_id)
   {
-    console.log(user_id)
+     console.log(user_id)
      this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
   }
+
 //----------
  componentDidMount(){
    this.getData();
@@ -118,7 +119,7 @@ UnFollow(user_id){
     </View>
 
       <View style={{flexDirection:'row-reverse'}}>
-        <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.UnFollow(item.user_id)}>
+        <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.LoadScreen()}>
               <Text style={{color:'#fff', fontSize:20,alignSelf:'center'}}>+</Text>
         </TouchableOpacity>   
       </View>

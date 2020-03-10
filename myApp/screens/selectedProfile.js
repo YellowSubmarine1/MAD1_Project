@@ -21,6 +21,7 @@ static navigationOptions = {
     }
 }
 getData(){
+    //console.log("Select User Page Loaded: "+this.props.navigation.state.params.user_id)
     let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id;
     console.log('Get Request');
     console.log(result);
@@ -65,6 +66,9 @@ getData(){
 
     getFollowers(){
       let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
+      console.log('Request: ');
+      console.log(input);
+
       return fetch(input,
       {
         headers: {
@@ -93,6 +97,8 @@ getData(){
 
       getFollowing(){
         let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
+              console.log('Request: ');
+      console.log(input);
         return fetch(input,
         {
           headers: {
@@ -118,9 +124,13 @@ getData(){
         console.log(error);
         });
         }
+
     componentDidMount(){
+        console.log("Selected Profile Page Reached:");
+        console.log("UserID:" +this.props.navigation.state.params.user_id);
         this.getData();
        } 
+
  render(){
  return(
 <View>

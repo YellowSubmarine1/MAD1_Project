@@ -1,14 +1,32 @@
 import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator  } from 'react-navigation-tabs';
-import { createStackNavigator  } from 'react-navigation-stack';
 
 const AppTabNav  = createBottomTabNavigator({
+  //Followers: {
+  //  screen: FollowersScreen
+  //},
+  //Following:{
+  //  screen: FollowingScreen
+  //},
   Login:{
     screen: Login
   },
   UserProfile: {
     screen: Profile
   },
+  EditProfile:{
+    screen: Edit_Profile
+  },
+ // Search:{
+ //   screen: searchUser
+ // },
+//  Chits:{
+//    screen: Chits
+//  },
+//  selectedUserProfile:{
+//    screen: selected_User_Profile
+//  },
+
   Register:{
     screen: Create_Account
   }

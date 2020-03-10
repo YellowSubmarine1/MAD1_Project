@@ -44,9 +44,9 @@ export default class FollowersScreen extends Component{
    });
    }
 
-   componentDidMount(){
-    this.getData();
-   } 
+  // componentDidMount(){
+  //  this.getData();
+  // } 
  // Loads the profile of the user selected 
  userProfile(user)
    {
@@ -78,22 +78,13 @@ export default class FollowersScreen extends Component{
 
    LoadScreen(user_id)
    {
-     console.log(user_id)
+      console.log(user_id);
       this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
    }
 
-   searchFilterFunction = text => { 
-    console.log(text)   
-   const newData = this.state.Followers_List.filter(item => {      
-     const itemData = `${item.given_name}   
-     ${item.given_name.toUpperCase()}`;
-      const textData = text;
-      return itemData.indexOf(textData) > -1;    
-   });
-   this.setState({ Followers_List: newData });  
-   console.log(this.state.Followers_List)  
- };
-
+   componentDidMount(){
+    this.getData();
+   }
  render(){
    if(this.state.isLoading){
       return(
@@ -112,6 +103,7 @@ export default class FollowersScreen extends Component{
     <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
       <FlatList
         data={this.state.Followers_List}
+        keyExtractor ={ item => item.user_id}
         renderItem={({item}) => (
           
             <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>

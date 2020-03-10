@@ -41,10 +41,11 @@ class LoginScreen extends Component{
          this.setState({
          isLoading: false,
          responseMade: responseJson,
-         result: 'Account Made'
+         result: 'Account Made',
        });
        console.log("JSON Results:");
        console.log(this.state.responseMade);
+       alert('Account Created, Please Login');
      })
      .catch((error) =>{
      console.log(error);
@@ -53,27 +54,32 @@ class LoginScreen extends Component{
  render(){
 
  return(
-    <View style={{flex:1, flexDirection: 'column', flexWrap:'wrap'}}>
-        <Text style={{width: 420, height: 60, backgroundColor: 'orange', fontWeight: 'bold'} }>Create Account</Text>
-        <Text>Given Name:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={(value) => this.setState({Given_Name:value})}
-        />
-        <Text>Family Name:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={(value) => this.setState({Family_Name:value})}
-        />
-        <Text>Email:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={(value) => this.setState({Email:value})}
-        />
-        <Text>Password:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
-        onChangeText={(value) => this.setState({Password:value})}
-        />
-        <Button  title="Create" onPress={() => this.createAccount(this)} ></Button>
-        <Text>{this.state.result}</Text>
-    </View>
+  <View>
+  <View style={{flexDirection:'column', alignSelf:'center', paddingTop:20}}>
+    <Text style={{color:'gray', fontSize:11, width:285}}>First Name</Text>
+      <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8}}
+          onChangeText={(value) => this.setState({Given_Name:value})}
+          value={this.state.Given_Name}
+      />
+      <Text style={{color:'gray', fontSize:11}}>Family Name</Text>
+      <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8}}
+          onChangeText={(value) => this.setState({Family_Name:value})}
+          value={this.state.Family_Name}
+      />
+      <Text style={{color:'gray', fontSize:11}}>Email</Text>
+      <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8}}
+          onChangeText={(value) => this.setState({Email:value})}
+          value={this.state.Email}
+      />
+      <Text style={{color:'gray', fontSize:11}}>Password</Text>
+      <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
+          onChangeText={(value) => this.setState({Password:value})}
+          secureTextEntry={true} 
+      />
+      <Button  title="Confirm" onPress={() => this.createAccount(this)} ></Button>
+
+  </View>
+</View>
  );
  }
 }
