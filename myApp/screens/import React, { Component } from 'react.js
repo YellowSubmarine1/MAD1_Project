@@ -179,3 +179,85 @@ renderItem={({item}) => (
 )}
 keyExtractor={i => i.id}
 />
+
+<View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
+<SearchBar
+        ref="searchBar"
+        placeholder="Search"    
+        onChangeText={this.searchFilterFunction}
+        autoCorrect={false} 
+        //onSearchButtonPress={this.refs.searchBar.unFocus}
+/>
+<View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+  <FlatList
+    data={this.state.Following_List}
+    renderItem={({item}) => (
+
+        <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5}}>
+          <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+            <Image
+                style={{width:70, height: 70, marginTop:10, marginLeft:5}}
+                source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+              />
+          </TouchableOpacity>
+          <View style={{justifyContent:'center', color:'green'}}>
+            <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
+            <Text style={{color:'gray'}}> {item.email }</Text> 
+          </View>
+
+          <View>
+            <TouchableOpacity onPress={()=> this.UnFollow(item.user_id)}>
+              <Image
+                  style={{width:40, height: 40, marginTop:10, marginLeft:5,alignItems:'flex-end'}}
+                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                />
+            </TouchableOpacity>
+          </View>
+
+      </View>
+    )}
+  />
+  
+</View>
+      <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, alignContent:'center', justifyContent:'center'}} onPress={()=> this.UnFollow(item.user_id)}>
+            <Text style={{color:'#fff', fontSize:20}}>+</Text>
+      </TouchableOpacity>
+</View>
+ );
+ }
+}
+
+<View>
+<FlatList
+  data={this.state.Chits_List}
+  renderItem={({item}) => (
+    <View>
+      <View style={{borderBottomWidth:1, borderBottomColor: 'gray', flexDirection:'row'}}>
+        <View style={{flex:1, margin:2, marginLeft:5}}>
+          <Image
+                style={{    width:50, height: 50, borderRadius:15}}
+                source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+              />
+        </View>
+
+        <View style={{flex:3}}>
+          <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:2}}>
+              <View style={{alignItems:'center'}}>
+                <Text>{item.user.given_name} {item.user.family_name}</Text>
+                <Text style={{fontSize:10}}>{item.user.email}</Text>
+              </View>
+              <View style={{alignItems:'center'}}>
+                <Text style={{fontSize:10}}> {item.timestamp}</Text>
+              </View>
+
+          </View>
+          <View style={{backgroundColor:'gray', width:'95%', height: 50, borderRadius:2, marginBottom:3}}>
+                <Text style={{fontSize:10, alignSelf:'center', alignItems:'stretch'}}> {item.chit_content}</Text>
+              </View>
+        </View>
+      </View>
+    </View>
+  )}
+  keyExtractor={i => i.id}
+/>
+</View>

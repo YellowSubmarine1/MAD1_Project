@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator,FlatList } from 'react-native';
+import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity } from 'react-native';
 class HomeScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
@@ -14,16 +14,21 @@ class HomeScreen extends Component{
         Email:'',
         Chits_List: [],
         Recent_Chits:[],
+
+        user_id:''
         }
     }
 
       // function uses 'fetch' to call the api and return a JSON string from the server
-  getData(){
-   return fetch("http://10.0.2.2:3333/api/v0.0.4/user/7",
+  getData()
+  {
+    let search = "http://10.0.2.2:3333/api/v0.0.5/chits";
+    console.log("All Chits:");
+    console.log(search);
+   return fetch(search,
    {
      headers: {
-       "Content-Type": "application/json",
-       "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+       "Content-Type": "application/json"
      },
      method: 'GET'
    })
@@ -33,14 +38,9 @@ class HomeScreen extends Component{
        isLoading: false,
        Chits_List: responseJson,
        Recent_Chits: responseJson.recent_chits,
-       Given_Name: responseJson.given_name,
-       Family_Name: responseJson.family_name,
-       Email: responseJson.email
      });
      console.log("JSON Results:");
-     console.log(responseJson);
-     console.log("Recent Chit:");
-     console.log(this.state.Recent_Chits);
+     console.log(this.state.Chits_List);
    })
    .catch((error) =>{
    console.log(error);
@@ -60,20 +60,93 @@ class HomeScreen extends Component{
       )
     }
  return(
-    <View style={{flex:1, flexDirection: 'column', flexWrap:'wrap'}}>
-        <Text style={{width: 420, height: 60, backgroundColor: 'orange', fontWeight: 'bold'} }>Chits</Text>
-        <FlatList
-        data={this.state.Recent_Chits}
-        renderItem={({item}) => (
-          <View>
-             <Text>{this.state.Given_Name} {this.state.Family_Name} {item.timestamp}</Text>
-            <Text>{item.chit_content }</Text>
-            <Text>-------------------------------------------------------------</Text>
+  <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
+  <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
+      <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Chits -</Text>
+  </View>
+  
+<View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+  <FlatList
+    data={this.state.Chits_List}
+    renderItem={({item}) => (
+      
+      <View style={{backgroundColor:'#9CCAE8',borderBottomWidth:1, borderBottomColor: '#ddd'}}>
+        <View style={{ flexDirection:'row', borderRadius:20}}>
+          <View style={{flex:1, margin:2, marginLeft:5}}>
+            <Image
+                  style={{width:40, height: 40, borderRadius:15}}
+                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                />
           </View>
-        )}
-      />
+
+          <View style={{flex:3}}>
+            <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:2}}>
+                <View>
+                  <Text style={{fontSize:9}}>{item.user.given_name} {item.user.family_name}</Text>
+                </View>
+                <View style={{alignItems:'center'}}>
+                  <Text style={{fontSize:9}}> {item.timestamp}</Text>
+                </View>
+            </View>
+
+            <View style={{backgroundColor:'#9CCAE8', width:'95%', height:50, borderRadius:2, marginBottom:3}}>
+                  <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {item.chit_content}</Text>
+            </View>
+
+        </View>
+      </View>
     </View>
+    )}
+    keyExtractor={i => i.id}
+  />
+</View>
+</View>
  );
  }
 }
+
+/*
+ <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
+  <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
+      <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Chits -</Text>
+  </View>
+
+  
+<View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+  <FlatList
+    data={this.state.Chits_List}
+    renderItem={({item}) => (
+      
+        <View style={{backgroundColor:'#9CCAE8', marginBottom:2}}>
+        <View style={{borderBottomWidth:1, borderBottomColor: 'gray', flexDirection:'row', borderRadius:20}}>
+          <View style={{flex:1, margin:2, marginLeft:5}}>
+            <Image
+                  style={{    width:50, height: 50, borderRadius:15}}
+                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                />
+          </View>
+
+          <View style={{flex:3}}>
+            <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:2}}>
+                <View style={{alignItems:'center'}}>
+                  <Text style={{fontSize:10}}>{item.user.given_name} {item.user.family_name}</Text>
+                  <Text style={{fontSize:10}}>{item.user.email}</Text>
+                </View>
+                <View style={{alignItems:'center'}}>
+                  <Text style={{fontSize:10}}> {item.timestamp}</Text>
+                </View>
+
+            </View>
+            <View style={{backgroundColor:'gray', width:'95%', height: 50, borderRadius:2, marginBottom:3}}>
+                  <Text style={{fontSize:10, alignSelf:'center', alignItems:'stretch'}}> {item.chit_content}</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    )}
+    keyExtractor={i => i.id}
+  />
+</View>
+</View>
+*/
 export default HomeScreen;

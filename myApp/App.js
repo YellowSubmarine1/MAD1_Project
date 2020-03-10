@@ -14,9 +14,15 @@ const AppTabNav  = createBottomTabNavigator({
   EditProfile:{
     screen: Edit_Profile
   },
-//  Chits:{
-//    screen: Chits
-//  },
+ // Search:{
+ //   screen: searchUser
+ // },
+  Chits:{
+    screen: Chits
+  },
+  selectedUserProfile:{
+    screen: selected_User_Profile
+  },
 //  Login:{
 //    screen: Login
 //  }
@@ -31,6 +37,8 @@ import FollowersScreen from './screens/Followers'
 import FollowingScreen from './screens/Following'
 import Profile from './screens/Profile'
 import Edit_Profile from './screens/Edit_Profile'
+import selected_User_Profile from './screens/selectedProfile'
+import searchUser from './screens/Search'
 import Chits from './screens/Chits'
 import Login from './screens/Login'
 import Create_Account from './screens/Create_Account'

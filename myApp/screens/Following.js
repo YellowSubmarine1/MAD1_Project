@@ -64,6 +64,12 @@ UnFollow(user_id){
   console.log(error);
   });
   }
+
+  LoadScreen(user_id)
+  {
+    console.log(user_id)
+     this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+  }
 //----------
  componentDidMount(){
    this.getData();
@@ -77,45 +83,46 @@ UnFollow(user_id){
       )
     }
  return(
-<View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
-<SearchBar
-        ref="searchBar"
-        placeholder="Search"    
-        onChangeText={this.searchFilterFunction}
-        autoCorrect={false} 
-        //onSearchButtonPress={this.refs.searchBar.unFocus}
-/>
-<View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
-  <FlatList
-    data={this.state.Following_List}
-    renderItem={({item}) => (
-
-        <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5}}>
-          <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
-            <Image
-                style={{width:70, height: 70, marginTop:10, marginLeft:5}}
-                source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-              />
-          </TouchableOpacity>
-          <View style={{justifyContent:'center', color:'green'}}>
-            <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
-            <Text style={{color:'gray'}}> {item.email }</Text> 
-          </View>
-
-          <View>
-            <TouchableOpacity onPress={()=> this.UnFollow(item.user_id)}>
-              <Image
-                  style={{width:40, height: 40, marginTop:10, marginLeft:5,alignItems:'flex-end'}}
-                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-                />
-            </TouchableOpacity>
-          </View>
-
+  <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
+      <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
+          <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Following -</Text>
       </View>
-    )}
-  />
-</View>
-</View>
+
+      
+    <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+      <FlatList
+        data={this.state.Following_List}
+        renderItem={({item}) => (
+          
+
+            <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
+              <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                <Image
+                    style={{width:50, height: 50, marginTop:10, marginLeft:5}}
+                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                  />
+              </TouchableOpacity>
+              <View style={{justifyContent:'center'}}>
+                <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
+                <Text style={{color:'white',fontSize:12}}> {item.email }</Text> 
+              </View>
+
+              <View style={{flexDirection:'row-reverse'}}>
+                <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center' }} onPress={()=> this.UnFollow(item.user_id)}>
+                  <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Unfollow</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+        )}
+      />
+    </View>
+
+      <View style={{flexDirection:'row-reverse'}}>
+        <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.UnFollow(item.user_id)}>
+              <Text style={{color:'#fff', fontSize:20,alignSelf:'center'}}>+</Text>
+        </TouchableOpacity>   
+      </View>
+  </View>
  );
  }
 }

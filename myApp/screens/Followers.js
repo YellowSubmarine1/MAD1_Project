@@ -50,11 +50,11 @@ export default class FollowersScreen extends Component{
  // Loads the profile of the user selected 
  userProfile(user)
    {
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+user
+    let result = "http://10.0.2.2:3333/api/v0.0.6/user/"+user
 
     console.log(result);
 
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+user,
+    return fetch(result,
     {
       headers: {
         "Content-Type": "application/json",
@@ -79,7 +79,7 @@ export default class FollowersScreen extends Component{
    LoadScreen(user_id)
    {
      console.log(user_id)
-      this.props.navigation.navigate('UserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+      this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
    }
 
    searchFilterFunction = text => { 
@@ -104,35 +104,37 @@ export default class FollowersScreen extends Component{
     }
  return(
 <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
-  <SearchBar
-          ref="searchBar"
-          placeholder="Search"    
-          onChangeText={this.searchFilterFunction}
-          autoCorrect={false} 
-  />
-  <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
-    <FlatList
-      data={this.state.Followers_List}
-      renderItem={({item}) => (
-          <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5}}>
-            <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
-              <Image
-                  style={styles.profilePicture}
-                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-                />
-            </TouchableOpacity>
-            <View style={{justifyContent:'center', color:'green'}}>
-              <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
-              <Text style={{color:'gray'}}> {item.email }</Text> 
-            </View>
-        </View>
-      )}
-    />
+      <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
+          <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Followers -</Text>
+      </View>
+
+      
+    <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
+      <FlatList
+        data={this.state.Followers_List}
+        renderItem={({item}) => (
+          
+            <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
+              <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                <Image
+                    style={{width:50, height: 50, marginTop:10, marginLeft:5}}
+                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                  />
+              </TouchableOpacity>
+              <View style={{justifyContent:'center'}}>
+                <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
+                <Text style={{color:'white',fontSize:12}}> {item.email }</Text> 
+              </View>
+
+          </View>
+        )}
+      />
+    </View>
   </View>
-</View>
  );
  }
 }
+
 
 const styles = StyleSheet.create({
   container: {

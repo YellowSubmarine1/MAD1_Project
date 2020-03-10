@@ -154,3 +154,39 @@ componentDidMount()
  }
 }
 export default HomeScreen;
+
+/*
+ <FlatList
+    data={this.state.Chits_List}
+    renderItem={({item}) => (
+      
+      <View style={{backgroundColor:'#9CCAE8',borderBottomWidth:1, borderBottomColor: '#ddd'}}>
+        <View style={{ flexDirection:'row', borderRadius:20}}>
+          <View style={{flex:1, margin:2, marginLeft:5}}>
+            <Image
+                  style={{width:40, height: 40, borderRadius:15}}
+                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                />
+          </View>
+
+          <View style={{flex:3}}>
+            <View style={{flexDirection: 'row', justifyContent:'space-around', marginTop:2}}>
+                <View>
+                  <Text style={{fontSize:9}}>{item.user.given_name} {item.user.family_name}</Text>
+                </View>
+                <View style={{alignItems:'center'}}>
+                  <Text style={{fontSize:9}}> {item.timestamp}</Text>
+                </View>
+            </View>
+
+            <View style={{backgroundColor:'#9CCAE8', width:'95%', height:'auto', borderRadius:2, marginBottom:3}}>
+                  <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {item.chit_content}</Text>
+            </View>
+
+        </View>
+      </View>
+    </View>
+    )}
+    keyExtractor={i => i.id}
+  />
+*/
