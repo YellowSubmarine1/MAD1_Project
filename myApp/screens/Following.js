@@ -119,7 +119,7 @@ UnFollow(user_id){
     </View>
 
       <View style={{flexDirection:'row-reverse'}}>
-        <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.LoadScreen()}>
+        <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.props.navigation.navigate('Search_Users')}>
               <Text style={{color:'#fff', fontSize:20,alignSelf:'center'}}>+</Text>
         </TouchableOpacity>   
       </View>

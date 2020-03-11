@@ -38,6 +38,7 @@ export default class FollowersScreen extends Component{
      });
      console.log("JSON Results:");
      console.log(responseJson);
+     console.log(this.state.Followers_List);
    })
    .catch((error) =>{
    console.log(error);
