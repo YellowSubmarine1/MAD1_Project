@@ -13,15 +13,17 @@ class HomeScreen extends Component{
         Given_Name:'',
         Family_Name:'',
         Email:'',
-        Password:''
+        Password:'',
+        XAuthorization: '',
         }
     }
 
      // function uses 'fetch' to call the api and return a JSON string from the server
-    getData(){
+    getData(user, authorization){
+      console.log('-------------------------------------');
       console.log('Edit Profile');
-      console.log(this.props.navigation.state.params.user_id);
-      let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id;
+      console.log(user);
+      let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ user;
     return fetch(result, {
         method: 'GET',
         headers: {
@@ -36,7 +38,8 @@ class HomeScreen extends Component{
         Given_Name: responseJson.given_name,
         Family_Name: responseJson.family_name,
         Email: responseJson.email,
-        user_id: responseJson.user_id
+        user_id: responseJson.user_id,
+        XAuthorization: authorization,
       });
       console.log(this.state.user_id);
     })
@@ -45,7 +48,11 @@ class HomeScreen extends Component{
     });
     }
   componentDidMount(){
-    this.getData();
+    console.log("-------------------------------------------------------------------------");
+    console.log("Selected Profile Page Reached:");
+    console.log("UserID:" +this.props.navigation.state.params.user_id);
+    console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
+    this.getData(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
    }
 
    updateProfile()
@@ -58,24 +65,30 @@ class HomeScreen extends Component{
     });
 
     console.log(result);
+    console.log(this.state.XAuthorization);
 
     return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+ this.state.user_id,
     {
       headers: {
         "Content-Type": "application/json",
-        "X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
+        "X-Authorization": this.state.XAuthorization
       },
       method: 'PATCH',
       body: result
     })
-    .then((response) => {
-      //Alert.alert("Item Updated!");
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log("-------- Update Made -------------");
+      console.log('Server Response: '+ responseJson);
+      alert("Profile Updated!");
       console.log('Updates made');
     })
     .catch((error) => {
       console.error(error);
     });
   }
+
+
  render(){
     if(this.state.isLoading){
         return(

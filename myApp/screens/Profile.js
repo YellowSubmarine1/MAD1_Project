@@ -17,13 +17,14 @@ static navigationOptions = {
     email:'',
     num_chits:'',
     recent_Chits: [],
-    Following:'',Followers:''
+    Following:'',Followers:'',
+    XAuthorization: '',
     }
 }
 
-getData(){
+getData(id,authuorization){
     console.log("__________________________________");
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/7";
+    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ id;
     console.log('Get Request');
     console.log(result);
     return fetch(result,
@@ -43,7 +44,8 @@ getData(){
         recent_Chits: responseJson.recent_chits,
         email: responseJson.email,
         num_chits: responseJson.recent_chits.length,
-        user_id: responseJson.user_id
+        user_id: responseJson.user_id,
+        XAuthorization: authuorization
       });
       this.getFollowers();
       this.getFollowing();
@@ -70,10 +72,12 @@ getData(){
 }
 
 /// Loads page to edit user profile
-edituserProfile(user_id)
+edituserProfile()
 {
-  console.log(user_id)
-   this.props.navigation.navigate('EditProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+  console.log("--------Edit Profile--------------");
+  console.log(this.state.user_id);
+  console.log(this.state.XAuthorization)
+   this.props.navigation.navigate('Edit_User_Profile',{user_id:this.state.user_id, XAuthorization:this.state.XAuthorization}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
 }
 
 
@@ -86,7 +90,7 @@ getFollowers(){
   {
     headers: {
       "Content-Type": "application/json",
-      "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+     // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
     },
     method: 'GET'
   })
@@ -109,14 +113,14 @@ getFollowers(){
   }
 
   getFollowing(){
-    let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
+    let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
     console.log('Request: ');
     console.log(input);
     return fetch(input,
     {
       headers: {
         "Content-Type": "application/json",
-        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+       // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
       },
       method: 'GET'
     })
@@ -140,10 +144,11 @@ getFollowers(){
 
 componentDidMount()
 {
+  console.log("-------------------------------------------------------------------------");
   console.log("Selected Profile Page Reached:");
   console.log("UserID:" +this.props.navigation.state.params.user_id);
   console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
-  this.getData();
+  this.getData(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
 } 
 
  render(){
@@ -173,7 +178,7 @@ componentDidMount()
   
                 {/* Styling for the Button*/}
         <View style={{flexDirection:'row',flex:1,marginLeft:20}}>
-              <Button onPress={()=> this.edituserProfile(this.state.user_id)}
+              <Button onPress={()=> this.edituserProfile()}
                title= 'Edit Profile'>
               </Button>
           </View>

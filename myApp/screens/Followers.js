@@ -25,7 +25,7 @@ export default class FollowersScreen extends Component{
    {
      headers: {
        "Content-Type": "application/json",
-       "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+      // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
      },
      method: 'GET'
    })
@@ -35,38 +35,6 @@ export default class FollowersScreen extends Component{
        isLoading: false,
        Followers_List: responseJson,
        User_Selected: responseJson
-     });
-     console.log("JSON Results:");
-     console.log(responseJson);
-   })
-   .catch((error) =>{
-   console.log(error);
-   });
-   }
-
-  // componentDidMount(){
-  //  this.getData();
-  // } 
- // Loads the profile of the user selected 
- userProfile(user)
-   {
-    let result = "http://10.0.2.2:3333/api/v0.0.6/user/"+user
-
-    console.log(result);
-
-    return fetch(result,
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
-      },
-      method: 'GET',
-    })
-    .then((response) => response.json())
-   .then((responseJson) => {
-       this.setState({
-       isLoading: false,
-       User_Selected: responseJson,
      });
      console.log("JSON Results:");
      console.log(responseJson);

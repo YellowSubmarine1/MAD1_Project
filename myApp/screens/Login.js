@@ -10,8 +10,8 @@ class LoginScreen extends Component{
         this.state ={
         isLoading: true,
         user_id:'',
-        Email:'',
-        Password:'',
+        Email:'cm@mail.co.uk',
+        Password:'Cheese',
         XAuthorization: '',
         Access: false,
 
@@ -38,7 +38,7 @@ class LoginScreen extends Component{
      .then((responseJson) => {
 
       console.log('Login Results: '+responseJson);
-      if(responseJson == 'Invalid email/password supplied')
+      if(responseJson == 'Invalid')
       {
         alert('Invalid User, Please Try Again');
       }
@@ -51,13 +51,12 @@ class LoginScreen extends Component{
           Access: true
         });
       }
-     //  console.log("JSON Results:");
-    //   console.log("XAuthorization:");
+
        console.log(this.state.XAuthorization);
        console.log("ID:");
        console.log(this.state.user_id);
 
-       this.props.navigation.navigate('UserProfile',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
+       this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
      })
      .catch((error) =>{
      console.log(error);

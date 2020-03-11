@@ -73,7 +73,6 @@ getData(){
       {
         headers: {
           "Content-Type": "application/json",
-          "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
         },
         method: 'GET'
       })
@@ -96,14 +95,13 @@ getData(){
       }
 
       getFollowing(){
-        let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
+        let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
               console.log('Request: ');
       console.log(input);
         return fetch(input,
         {
           headers: {
             "Content-Type": "application/json",
-            "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
           },
           method: 'GET'
         })

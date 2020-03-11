@@ -2,7 +2,7 @@ import { createAppContainer } from 'react-navigation';
 import { createBottomTabNavigator  } from 'react-navigation-tabs';
 import { createStackNavigator  } from 'react-navigation-stack';
 
-const AppTabNav  = createBottomTabNavigator({
+const AppTabNav = createStackNavigator ({
   Login:{
     screen: Login
   },
@@ -11,16 +11,43 @@ const AppTabNav  = createBottomTabNavigator({
   },
   Register:{
     screen: Create_Account
+  },
+    selectedUserProfile:{
+    screen: selected_User_Profile
+  },
+  Edit_User_Profile:{
+    screen: Edit_Profile
+  },
+  HomePage:{
+    screen: createBottomTabNavigator({
+      Profile: {
+        screen: Profile
+      },
+      Chits:{
+        screen: Chits
+      },
+      Followers: {
+        screen: FollowersScreen
+      },
+      Following:{
+        screen: FollowingScreen
+      }
+    }),
+    navigationOptions: {
+      title: 'Home',
+      headerShown: false
+    }
   }
 });
+
 const AppContainer = createAppContainer(AppTabNav )
 export default AppContainer;
-import FollowersScreen from './screens/Followers'
-import FollowingScreen from './screens/Following'
 import Profile from './screens/Profile'
-import Edit_Profile from './screens/Edit_Profile'
-import selected_User_Profile from './screens/selectedProfile'
-import searchUser from './screens/Search'
-import Chits from './screens/Chits'
 import Login from './screens/Login'
 import Create_Account from './screens/Create_Account'
+
+import FollowersScreen from './screens/Followers'
+import FollowingScreen from './screens/Following'
+import Chits from './screens/Chits'
+import Edit_Profile from './screens/Edit_Profile'
+import selected_User_Profile from './screens/selectedProfile'
