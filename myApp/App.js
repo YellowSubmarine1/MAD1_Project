@@ -3,9 +3,6 @@ import { createBottomTabNavigator  } from 'react-navigation-tabs';
 import { createStackNavigator  } from 'react-navigation-stack';
 
 const AppTabNav = createStackNavigator ({
-  Post_Chits:{
-    screen:post_chits
-  },
   Login:{
     screen: Login
   },
@@ -23,6 +20,9 @@ const AppTabNav = createStackNavigator ({
   },
   Search_Users:{
     screen: Search_Users
+  },
+  Post_Chits:{
+    screen:post_chits
   },
   HomePage:{
     screen: createBottomTabNavigator({

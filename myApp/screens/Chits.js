@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity } from 'react-native';
+import { FloatingAction } from "react-native-floating-action";
 class HomeScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
@@ -15,7 +16,22 @@ class HomeScreen extends Component{
         Chits_List: [],
         Recent_Chits:[],
 
-        user_id:''
+        user_id:'',
+        actions: [
+          {
+            text: "Logout",
+          //  icon: require("./images/ic_accessibility_white.png"),
+            name: "bt_accessibility",
+            position: 2
+          },
+          {
+            text: "Post Chits",
+          //  icon: require("./images/ic_language_white.png"),
+            name: "Post Chits",
+            position: 1,
+            //this.props.navigation.navigate('Post_Chits')
+          }
+        ]
         }
     }
 
@@ -100,6 +116,14 @@ class HomeScreen extends Component{
     keyExtractor={i => i.id}
   />
 </View>
+
+  <FloatingAction
+    actions={this.state.actions}
+    onPressItem={name => {
+      console.log(`selected button: ${name}`);
+      this.props.navigation.navigate('Post_Chits')
+    }}
+  />
 </View>
  );
  }
