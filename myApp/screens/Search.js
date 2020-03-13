@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, Image,FlatList,TextInput} from 'react-native';
+import { Text, View, Button, Image,FlatList,TextInput,AsyncStorage} from 'react-native';
 export default class SearchScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -14,7 +14,8 @@ static navigationOptions = {
     family_name:'',
     given_name:'',
     email:'',
-    user_id:''
+    user_id:'',
+    Authorization:''
     }
 }
 
@@ -25,13 +26,14 @@ searchUser()
  {
    headers: {
      "Content-Type": "application/json",
-     "X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
+   //  "X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
    },
    method: 'GET',
  })
- .then((response) => response.json())
+ //.then((response) => response.json())
+ .then((response) => {
+    return response.json()
  .then((responseJson) => {
-     console.log(0,responseJson)
      this.setState({
      isLoading: false,
      Search_List: responseJson,
@@ -41,41 +43,61 @@ searchUser()
      user_id: responseJson.user_id
    });
    console.log("----------------------Results----------------------");
-   console.log(responseJson);
-   console.log("Search_List Array: "+ this.state.Search_List);
-   console.log("Name: "+ this.state.family_name);
+   console.log("Response Status: "+response.status)
+   //console.log(responseJson);
+   console.log("Name: "+ this.state.given_name +" " +this.state.family_name);
  })
- .catch((error) => {
-   console.error(error);
- });
-}
+})}
 
 
-followUser(user)
+followUser()
 {   console.log("----------------------Follow User----------------------");
  console.log(this.state.user_id);
  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" +this.state.user_id+"/follow",
  {
    headers: {
      "Content-Type": "application/json",
-     "X-Authorization": "d54b32ef894aeeaaf16766c347a78a97"
+     "X-Authorization": this.state.Authorization
    },
    method: 'POST',
  })
- .then((response) => response.json())
- .then((responseJson) => {
-   if(responseJson == 'OK')
-   {
-     alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
-   }
-     console.log(0,responseJson)
-   console.log("----------------------Results----------------------");
-   console.log(responseJson);
- })
- .catch((error) => {
-   console.error(error);
- });
-}
+ .then((response) => {
+  return response.json()
+.then((responseJson) => {
+
+ console.log("----------------------Results----------------------");
+ console.log("Response Status: "+response.status)
+ console.log("Response Status: "+responseJson)
+ if(response.status == 200)
+ {
+  alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
+  this.props.navigation.navigate('Following');
+ }
+ else if (response.status === 400){
+   alert("It didn't Work");
+   console.log("Follow attempt failed");
+ }
+})
+})}
+
+_retrieveData = async () => {
+  try {
+    const value = await AsyncStorage.getItem('Token');
+    if (value !== null) {
+      // We have data!!
+      console.log("Post_Chits Retreived Token: "+value);
+      this.setState({Authorization:value});
+
+      console.log("Token Value is: "+this.state.Authorization);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
+componentDidMount(){
+  console.log("---------  Search Profile --------------")
+  this._retrieveData();
+ }
 
 render(){
  return(

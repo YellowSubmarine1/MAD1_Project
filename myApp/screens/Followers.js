@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View,ActivityIndicator,FlatList, StyleSheet, Image,TouchableOpacity, Button } from 'react-native';
+import { Text, View,ActivityIndicator,FlatList, StyleSheet, Image,TouchableOpacity, AsyncStorage } from 'react-native';
 import SearchBar from 'react-native-search-bar';
 export default class FollowersScreen extends Component{
     // removes the header from the page
@@ -13,6 +13,7 @@ export default class FollowersScreen extends Component{
         Followers_List:[],
         User_Selected: [],
         search: '',
+        user_id:''
         }
     }
 
@@ -21,11 +22,10 @@ export default class FollowersScreen extends Component{
     };
   // function uses 'fetch' to call the api and return a JSON string from the server
   getData(){
-   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/followers",
+   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/followers",
    {
      headers: {
-       "Content-Type": "application/json",
-      // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+       "Content-Type": "application/json"
      },
      method: 'GET'
    })
@@ -51,8 +51,26 @@ export default class FollowersScreen extends Component{
       this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
    }
 
-   componentDidMount(){
+   _retrieveTokenData = async () => {
+    console.log("--------------------Retreive Token--------------------------------");
+    try {
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+
+      if (key2 !== null) {
+        this.setState({user_id:key2});
+  
+        console.log("Recieved User UD Value is: "+this.state.user_id);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
     this.getData();
+  };
+
+   componentDidMount(){
+     console.log("------- Followers Page -------");
+    this._retrieveTokenData();
+    //this.getData();
    }
  render(){
    if(this.state.isLoading){

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator,FlatList ,TouchableOpacity, Image} from 'react-native';
+import { Text, View, Button,TextInput,ActivityIndicator,FlatList ,TouchableOpacity, Image,AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBar from 'react-native-search-bar';
 class Following extends Component{
@@ -12,16 +12,20 @@ class Following extends Component{
         this.state ={
         isLoading: true,
         Following_List:[],
+        user_id:'',
+        XAuthorization:''
         }
     }
 
       // function uses 'fetch' to call the api and return a JSON string from the server
   getData(){
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/following",
+    let Results = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/following";
+    console.log(this.state.user_id);
+    return fetch(Results,
     {
       headers: {
         "Content-Type": "application/json",
-        "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
+        //"X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
       },
       method: 'GET'
     })
@@ -48,7 +52,8 @@ UnFollow(user_id){
   {
     headers: {
       "Content-Type": "application/json",
-      "X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
+      //"X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
+      "X-Authorization":this.state.XAuthorization
     },
     method: 'delete'
   })
@@ -72,8 +77,30 @@ UnFollow(user_id){
   }
 
 //----------
+
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('Token');
+    const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+
+    console.log("Token Value is: "+value);
+    console.log("User UD Value is: "+key2);
+
+    if (value !== null && key2 !== null) {
+      this.setState({XAuthorization:value});
+      this.setState({user_id:key2});
+      console.log("Recieved Token Value is: "+this.state.XAuthorization);
+      console.log("Recieved User UD Value is: "+this.state.user_id);
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+  this.getData();
+};
  componentDidMount(){
-   this.getData();
+   this._retrieveTokenData()
+   //this.getData();
   } 
  render(){
    if(this.state.isLoading){

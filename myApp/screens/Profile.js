@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Image, Button, FlatList} from 'react-native';
+import { AsyncStorage } from 'react-native';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -24,7 +25,8 @@ static navigationOptions = {
 
 getData(id,authuorization){
     console.log("__________________________________");
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ id;
+    console.log("user_id: "+ this.state.user_id)
+    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.state.user_id;
     console.log('Get Request');
     console.log(result);
     return fetch(result,
@@ -63,7 +65,6 @@ getData(id,authuorization){
 
       console.log("User ID:");
       console.log(this.state.user_id);
-      //this.setState{{num_chits: this.state.recent_Chits.length}};
 
     })
     .catch((error) =>{
@@ -74,17 +75,16 @@ getData(id,authuorization){
 /// Loads page to edit user profile
 edituserProfile()
 {
-  console.log("--------Edit Profile--------------");
-  console.log(this.state.user_id);
-  console.log(this.state.XAuthorization)
+  //console.log("--------Edit Profile--------------");
+  //console.log(this.state.user_id);
+  //console.log(this.state.XAuthorization)
    this.props.navigation.navigate('Edit_User_Profile',{user_id:this.state.user_id, XAuthorization:this.state.XAuthorization}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
 }
 
 
 getFollowers(){
   let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
-  console.log('Request: ');
-  console.log(input);
+  console.log('Request: '+input);
 
   return fetch(input,
   {
@@ -105,7 +105,7 @@ getFollowers(){
 
     console.log("Followers:");
     console.log(this.state.Followers);
-    console.log("__________________________________");
+    console.log("__________________________________"); 
   })
   .catch((error) =>{
   console.log(error);
@@ -141,13 +141,35 @@ getFollowers(){
     console.log(error);
     });
     }
+  
+  _retrieveTokenData = async () => {
+    console.log("--------------------Retreive Token--------------------------------");
+    try {
+      const value = await AsyncStorage.getItem('Token');
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+      if (value !== null && key2 !== null) {
+        console.log("Post_Chits Retreived Token: "+value);
+        this.setState({XAuthorization:value});
+        this.setState({user_id:key2});
+  
+        console.log("Recieved Token Value is: "+this.state.XAuthorization);
+        console.log("Recieved User UD Value is: "+this.state.user_id);
+        this.getData(this.state.user_id, this.state.XAuthorization)
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
+
 
 componentDidMount()
 {
-  console.log("-------------------------------------------------------------------------");
-  console.log("Selected Profile Page Reached:");
-  console.log("UserID:" +this.props.navigation.state.params.user_id);
-  console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
+  //console.log("-------------------------------------------------------------------------");
+  this._retrieveTokenData();
+  console.log('User_ID:'+ this.state.user_id);
+ // console.log("Selected Profile Page Reached:");
+ // console.log("UserID:" +this.props.navigation.state.params.user_id);
+ // console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
   this.getData(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
 } 
 
