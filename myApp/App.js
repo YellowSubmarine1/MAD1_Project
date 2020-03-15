@@ -3,8 +3,8 @@ import { createBottomTabNavigator  } from 'react-navigation-tabs';
 import { createStackNavigator  } from 'react-navigation-stack';
 
 const AppTabNav = createStackNavigator ({
- // Post_Chits:{
- //   screen:post_chits
+ // Chits:{
+ //   screen: Chits
  // },
   Login:{
     screen: Login

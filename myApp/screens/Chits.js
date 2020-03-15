@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity,StyleSheet } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
+import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 class HomeScreen extends Component{
     // removes the header from the page
@@ -64,6 +65,43 @@ class HomeScreen extends Component{
    });
    }
   
+   // Logout
+   logout_User()
+   {
+
+    return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
+    {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      method: 'POST',
+      //body: result
+    })
+    .then((response) => {
+     console.log("Res:" + JSON.stringify(response));
+     console.log("Res status:" + JSON.stringify(response.status));
+     console.log("Res ok?:" + JSON.stringify(response.ok));
+     this.setState({
+       server_response: response.status,
+     });
+     return response.json()
+   })
+     .then((responseJson) => {
+         console.log("----------------------Results----------------------");
+         console.log("Response Status: "+this.state.server_response)
+         if(this.state.server_response == 200)
+         {
+           this.props.navigation.navigate('Login');
+         }
+         elseif(this.state.server_response == 401)
+         {
+           console.log("Please Login")
+         }
+    })
+    .catch((error) =>{
+     console.log(error);
+     })
+   }
 
  componentDidMount(){
    this.getData();
@@ -121,13 +159,10 @@ class HomeScreen extends Component{
 </View>
 
 <ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-            <Icon name="md-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
+          <ActionButton.Item buttonColor='#3498db' title="Logout" onPress={() => this.logout_User()}>
             <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
           </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
+          <ActionButton.Item buttonColor='#1abc9c' title="Post Chits" onPress={() => this.props.navigation.navigate('Post_Chits')}>
             <Icon name="md-done-all" style={styles.actionButtonIcon} />
           </ActionButton.Item>
         </ActionButton>

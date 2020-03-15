@@ -47,6 +47,9 @@ class LoginScreen extends Component{
        console.log(this.state.responseMade);
        alert('Account Created, Please Login');
      })
+     .then((response)=>{
+      this.props.navigation.navigate('Login');
+     })
      .catch((error) =>{
      console.log(error);
      });
