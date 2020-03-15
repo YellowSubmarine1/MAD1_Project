@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator,FlatList ,TouchableOpacity, Image,AsyncStorage} from 'react-native';
+import { Text, View, StyleSheet, Button,TextInput,ActivityIndicator,FlatList ,TouchableOpacity, Image,AsyncStorage} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import SearchBar from 'react-native-search-bar';
+import ActionButton from 'react-native-action-button';
 class Following extends Component{
     // removes the header from the page
     static navigationOptions = {
@@ -150,17 +151,30 @@ _retrieveTokenData = async () => {
       />
     </View>
 
+    <ActionButton buttonColor="rgba(231,76,60,1)">
+          <ActionButton.Item buttonColor='#3498db' title="Follow Users" onPress={()=> this.props.navigation.navigate('Search_Users')}>
+            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+          </ActionButton.Item>
+        </ActionButton>
+  </View>
+ ); 
+ }
+}
+const styles = StyleSheet.create({
+  actionButtonIcon: {
+    fontSize: 20,
+    height: 22,
+    color: 'white',
+  },
+});
+/*
       <View style={{flexDirection:'row-reverse'}}>
         <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:60,borderRadius:50, justifyContent:'center' }} onPress={()=> this.props.navigation.navigate('Search_Users')}>
               <Text style={{color:'#fff', fontSize:20,alignSelf:'center'}}>+</Text>
         </TouchableOpacity>   
       </View>
-  </View>
- ); 
- }
-}
 
-/*
+
 <View style={{flex:1, flexDirection: 'row', flexWrap:'wrap'}}>
 <Text style={{width: 420, height: 60, backgroundColor: 'orange', fontWeight: 'bold'} }>Following</Text>
 <FlatList
