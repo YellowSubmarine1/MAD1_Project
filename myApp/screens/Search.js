@@ -3,7 +3,7 @@ import { Text, View, Button, Image,FlatList,TextInput,AsyncStorage} from 'react-
 export default class SearchScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
-    header: null
+    header: false
    }
    constructor(props){
     super(props);
@@ -15,7 +15,8 @@ static navigationOptions = {
     given_name:'',
     email:'',
     user_id:'',
-    Authorization:''
+    Authorization:'',
+    server_response:''
     }
 }
 
@@ -26,13 +27,15 @@ searchUser()
  {
    headers: {
      "Content-Type": "application/json",
-   //  "X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
    },
    method: 'GET',
  })
  //.then((response) => response.json())
  .then((response) => {
-    return response.json()
+  this.setState({
+    server_response: response.status
+  });
+  return response.json()})
  .then((responseJson) => {
      this.setState({
      isLoading: false,
@@ -43,11 +46,22 @@ searchUser()
      user_id: responseJson.user_id
    });
    console.log("----------------------Results----------------------");
-   console.log("Response Status: "+response.status)
-   //console.log(responseJson);
+   console.log("Response Status: "+this.state.server_response)
+   //console.log("Response Results: "+responseJson)
+
    console.log("Name: "+ this.state.given_name +" " +this.state.family_name);
+   if(this.state.server_response == 200)
+   {
+    alert("User Found: "+ this.state.given_name +" "+ this.state.family_name);
+  }   else if (this.state.server_response === 404){
+    alert("It didn't Work");
+    console.log("Follow attempt failed");
+  }
+})
+.catch((error) =>{
+ console.log(error);
  })
-})}
+}
 
 
 followUser()
@@ -62,23 +76,37 @@ followUser()
    method: 'POST',
  })
  .then((response) => {
-  return response.json()
-.then((responseJson) => {
-
- console.log("----------------------Results----------------------");
- console.log("Response Status: "+response.status)
- console.log("Response Status: "+responseJson)
- if(response.status == 200)
- {
-  alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
-  this.props.navigation.navigate('Following');
- }
- else if (response.status === 400){
-   alert("It didn't Work");
-   console.log("Follow attempt failed");
- }
+  response.json()
+  this.setState({
+    server_response: response.status
+  });
+  console.log("Server Full Response:"+response);
+  console.log("Server Response:"+ this.state.server_response);
+  console.log("Res:" + JSON.stringify(response));
+  console.log("Res status:" + JSON.stringify(response.status));
+  console.log("Res ok?:" + JSON.stringify(response.ok));
+  //return response.json()
 })
-})}
+  .then((responseJson) => {
+
+      console.log("----------------------Results----------------------");
+      console.log("Response Status: "+this.state.server_response)
+      console.log("Response Status: "+responseJson)
+      //alert("Now Following User ");
+      if(this.state.server_response == 200)
+      {
+        alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
+        this.props.navigation.navigate('Following');
+      }
+      else if (this.state.server_response === 400){
+        alert("Already following "+this.state.given_name +" "+ this.state.family_name);
+        console.log("Follow attempt failed");
+      }
+ })
+ .catch((error) =>{
+  console.log(error);
+  })
+}
 
 _retrieveData = async () => {
   try {
@@ -148,4 +176,29 @@ render(){
         )}
       />
     </View>
+
+
+     .then((response) => {
+      return response.json()
+   .then((responseJson) => {
+    this.setState({
+      XAuthorization: responseJson.token,
+      user_id : responseJson.id
+    });
+     console.log("----------------------Results----------------------");
+     console.log("Response Status: "+response.status)
+     //console.log("Returned :"+responseJson);
+     if(response.status == 200)
+     {
+      console.log("ID: "+responseJson.id);
+      console.log("Authorization: "+ responseJson.token);
+      this.storeToken(responseJson.token, responseJson.id); // set the Authorization token
+      this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
+     }
+     else if (responseJson === 400){
+       alert("Incorrect Email or Password, try again");
+       console.log("Incorrect Email or Password");
+     }
+   })
+  })}
 */

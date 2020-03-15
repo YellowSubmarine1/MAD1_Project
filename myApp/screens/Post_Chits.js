@@ -4,7 +4,7 @@ import Geolocation from 'react-native-geolocation-service';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
-    header: null
+    header: false
    }
   
    constructor(props){
@@ -24,6 +24,7 @@ static navigationOptions = {
     // parameters for all the features of the elements in the list
     location:[],
     locationPermission: false,
+    server_response:''
     }
 }
 async requestLocationPermission(){
@@ -46,9 +47,9 @@ async requestLocationPermission(){
       console.log('Location permission denied');
       return false;
     }
-    } catch (err) {
-    console.warn(err);
-    }
+  } catch (err) {
+  console.warn(err);
+  }
  };
 findCoordinates = () => {
   if(!this.state.locationPermission){
@@ -107,15 +108,22 @@ postChit()
    method: 'POST',
    body: result
  })
- .then((response) => response.json())
- .then((responseJson) => {
-   console.log("-------- Chit Posted -------------");
-   console.log('Server Response: '+ responseJson.status);
-   alert("Chit Posted!");
+ .then((response) => {
+  response.json()
+  this.setState({
+    server_response: response.status
+  });
+  //return response.json()
+})
+  .then((responseJson) => {
+      console.log("-------- Chit Posted -------------");
+      console.log("Response Status: "+this.state.server_response)
+      alert("Chit Posted!");
+      this.props.navigation.navigate('Chits');
  })
- .catch((error) => {
-   console.error(error);
- });
+ .catch((error) =>{
+  console.log(error);
+  })
 }
 
 

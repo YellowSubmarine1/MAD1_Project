@@ -3,7 +3,7 @@ import { Text, View, FlatList,Image} from 'react-native';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
-    header: null
+  header: false
    }
    
    constructor(props){

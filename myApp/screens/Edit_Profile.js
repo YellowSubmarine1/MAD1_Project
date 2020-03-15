@@ -3,7 +3,7 @@ import { Text, View, Button,TextInput,ActivityIndicator, Image } from 'react-nat
 class HomeScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
-        header: null
+      header: false
     }
     constructor(props){
         super(props);
@@ -76,12 +76,28 @@ class HomeScreen extends Component{
       method: 'PATCH',
       body: result
     })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log("Res:" + JSON.stringify(response));
+      console.log("Res status:" + JSON.stringify(response.status));
+      console.log("Res ok?:" + JSON.stringify(response.ok));
+      this.setState({
+        server_response: response.status,
+      });
+      return response.json()
+    })
     .then((responseJson) => {
-      console.log("-------- Update Made -------------");
-      console.log('Server Response: '+ responseJson);
-      alert("Profile Updated!");
-      console.log('Updates made');
+
+      if(this.state.server_response == 201)
+      {
+        console.log("-------- Update Made -------------");
+        console.log('Server Response: '+ responseJson);
+        alert("Profile Updated!");
+        console.log('Updates made');
+        this.props.navigation.navigate('Profile');
+      }
+      else if (this.state.server_response === 404){
+        alert("Update not made");
+      }
     })
     .catch((error) => {
       console.error(error);

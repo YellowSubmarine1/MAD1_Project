@@ -5,7 +5,7 @@ import SearchBar from 'react-native-search-bar';
 class Following extends Component{
     // removes the header from the page
     static navigationOptions = {
-        header: null
+      header: false
     }
     constructor(props){
         super(props);
@@ -52,18 +52,20 @@ UnFollow(user_id){
   {
     headers: {
       "Content-Type": "application/json",
-      //"X-Authorization": "4c6334d91e50abd9871012dcc3ade9ca"
       "X-Authorization":this.state.XAuthorization
     },
     method: 'delete'
   })
-  .then((response) => response.json())
+  .then((response) => { 
+      response.json();
+      this.getData(); 
+    }) 
+  //.then((response) => response.json())
   .then((responseJson) => {
       this.setState({
       isLoading: false,
     });
-    console.log("JSON Results:");
-    console.log(responseJson);
+    console.log("JSON Results: "+ responseJson);
   })
   .catch((error) =>{
   console.log(error);
@@ -142,6 +144,9 @@ _retrieveTokenData = async () => {
               </View>
             </View>
         )}
+        keyExtractor={(item, index) => {
+          return item.id;
+        }}
       />
     </View>
 
@@ -151,7 +156,7 @@ _retrieveTokenData = async () => {
         </TouchableOpacity>   
       </View>
   </View>
- );
+ ); 
  }
 }
 

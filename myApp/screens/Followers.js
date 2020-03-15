@@ -4,7 +4,7 @@ import SearchBar from 'react-native-search-bar';
 export default class FollowersScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
-        header: null
+      header: false
     }
     constructor(props){
         super(props);
@@ -107,6 +107,9 @@ export default class FollowersScreen extends Component{
 
           </View>
         )}
+        keyExtractor={(item, index) => {
+          return item.id;
+        }}
       />
     </View>
   </View>

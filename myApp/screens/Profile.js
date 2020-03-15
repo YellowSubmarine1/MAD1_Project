@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Button, FlatList} from 'react-native';
+import { Text, View, Image, Button, FlatList,ActivityIndicator} from 'react-native';
 import { AsyncStorage } from 'react-native';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
-    header: null
+  header: false
    }
    
    constructor(props){
@@ -90,7 +90,6 @@ getFollowers(){
   {
     headers: {
       "Content-Type": "application/json",
-     // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
     },
     method: 'GET'
   })
@@ -120,7 +119,6 @@ getFollowers(){
     {
       headers: {
         "Content-Type": "application/json",
-       // "X-Authorization": "c9a196bf7f9cd7c02f4d90a4504310de"
       },
       method: 'GET'
     })
@@ -174,6 +172,12 @@ componentDidMount()
 } 
 
  render(){
+  if(this.state.isLoading){
+    return(
+    <View>
+      <ActivityIndicator/>
+    </View>
+    )} 
  return(
   <View>
     <View style={{flexDirection:'row',paddingTop:3, backgroundColor:'#ced6df'}}>
@@ -244,7 +248,9 @@ componentDidMount()
         </View>
       </View>
       )}
-      keyExtractor={i => i.id}
+      keyExtractor={(item, index) => {
+        return item.id;
+      }}
     />
    </View>
  );

@@ -3,7 +3,7 @@ import { Text, View, Button,TextInput,ActivityIndicator, AsyncStorage } from 're
 class LoginScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
-        header: null
+        header: false
     }
     constructor(props){
         super(props);
@@ -11,16 +11,14 @@ class LoginScreen extends Component{
         Email:'cm@mail.co.uk',
         Password:'Cheese',
         XAuthorization:'',
-        user_id : ''
+        user_id : '',
+        server_response:''
         }
     }
 storeToken = async(token,user_id)=>{
   console.log("-----Async Token ------");
- // console.log("Token: " +token);
-  //console.log("User_ID: " +user_id);
   try{
     await AsyncStorage.setItem('Token',token);
-    //await AsyncStorage.setItem('key2', ""+user_id)
     await AsyncStorage.setItem('key2', JSON.stringify(user_id))
     console.log("store token:" +token);
     console.log("store id:" +user_id);
@@ -45,28 +43,36 @@ storeToken = async(token,user_id)=>{
        body: result
      })
      .then((response) => {
+      console.log("Res:" + JSON.stringify(response));
+      console.log("Res status:" + JSON.stringify(response.status));
+      console.log("Res ok?:" + JSON.stringify(response.ok));
+      this.setState({
+        server_response: response.status,
+      });
       return response.json()
-   .then((responseJson) => {
-    this.setState({
-      XAuthorization: responseJson.token,
-      user_id : responseJson.id
-    });
-     console.log("----------------------Results----------------------");
-     console.log("Response Status: "+response.status)
-     //console.log("Returned :"+responseJson);
-     if(response.status == 200)
-     {
-      console.log("ID: "+responseJson.id);
-      console.log("Authorization: "+ responseJson.token);
-      this.storeToken(responseJson.token, responseJson.id); // set the Authorization token
-      this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
-     }
-     else if (responseJson === 400){
-       alert("Incorrect Email or Password, try again");
-       console.log("Incorrect Email or Password");
-     }
-   })
-  })}
+    })
+      .then((responseJson) => {
+        this.setState({
+          XAuthorization: responseJson.token,
+          user_id : responseJson.id
+        });
+          console.log("----------------------Results----------------------");
+          console.log("Response Status: "+this.state.server_response)
+          if(this.state.server_response == 200)
+          {
+            console.log("ID: "+this.state.user_id);
+            console.log("Authorization: "+ this.state.XAuthorization);
+            this.storeToken(this.state.XAuthorization, this.state.user_id); // set the Authorization token
+            this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
+          }
+          else if (this.state.server_response === 400){
+            alert("Incorrect Email or Password, try again");
+          }
+     })
+     .catch((error) =>{
+      console.log(error);
+      })
+    }
 
  render(){
 
