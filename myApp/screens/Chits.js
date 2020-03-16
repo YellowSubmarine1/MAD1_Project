@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity,StyleSheet } from 'react-native';
+import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity,StyleSheet, AsyncStorage } from 'react-native';
 import { FloatingAction } from "react-native-floating-action";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -19,21 +19,7 @@ class HomeScreen extends Component{
         Recent_Chits:[],
 
         user_id:'',
-        actions: [
-          {
-            text: "Logout",
-          //  icon: require("./images/ic_accessibility_white.png"),
-            name: "bt_accessibility",
-            position: 2
-          },
-          {
-            text: "Post Chits",
-          //  icon: require("./images/ic_language_white.png"),
-            name: "Post Chits",
-            position: 1,
-            //this.props.navigation.navigate('Post_Chits')
-          }
-        ]
+        XAuthorization:''
         }
     }
 
@@ -72,7 +58,8 @@ class HomeScreen extends Component{
     return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
     {
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "X-Authorization": this.state.XAuthorization
       },
       method: 'POST',
       //body: result
@@ -81,13 +68,22 @@ class HomeScreen extends Component{
      console.log("Res:" + JSON.stringify(response));
      console.log("Res status:" + JSON.stringify(response.status));
      console.log("Res ok?:" + JSON.stringify(response.ok));
-     this.setState({
-       server_response: response.status,
-     });
-     return response.json()
+     //this.setState({
+     //  server_response: response.status,
+    // });
+    if(JSON.stringify(response.status) == 200)
+    {
+      this.props.navigation.navigate('Login');
+    }
+    else if(JSON.stringify(response.status) == 401)
+    {
+      console.log("Please Login")
+    }
+     //return response.json()
    })
-     .then((responseJson) => {
+ /*    .then((responseJson) => {
          console.log("----------------------Results----------------------");
+         console.log("Response: "+responseJson)
          console.log("Response Status: "+this.state.server_response)
          if(this.state.server_response == 200)
          {
@@ -97,13 +93,27 @@ class HomeScreen extends Component{
          {
            console.log("Please Login")
          }
-    })
+    })*/
     .catch((error) =>{
      console.log(error);
      })
    }
-
+   _retrieveTokenData = async () => {
+    console.log("--------------------Retreive Token--------------------------------");
+    try {
+      const value = await AsyncStorage.getItem('Token');
+      if (value !== null) {
+        console.log("Post_Chits Retreived Token: "+value);
+        this.setState({XAuthorization:value});
+        console.log("Recieved Token Value is: "+this.state.XAuthorization);
+        //this.getData();
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
  componentDidMount(){
+   this._retrieveTokenData();
    this.getData();
   } 
  render(){

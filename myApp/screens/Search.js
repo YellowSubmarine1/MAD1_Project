@@ -35,6 +35,7 @@ searchUser()
   this.setState({
     server_response: response.status
   });
+  console.log("res: "+response)
   return response.json()})
  .then((responseJson) => {
      this.setState({
