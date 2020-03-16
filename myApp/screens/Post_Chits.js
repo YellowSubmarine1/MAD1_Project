@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button, TextInput, AsyncStorage,Alert,PermissionsAndroid} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {RNCamera } from 'react-native-camera';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -24,7 +25,8 @@ static navigationOptions = {
     // parameters for all the features of the elements in the list
     location:[],
     locationPermission: false,
-    server_response:''
+    server_response:'',
+    Image_URL:''
     }
 }
 async requestLocationPermission(){
@@ -83,47 +85,47 @@ findCoordinates = () => {
 
 postChit()
 {
- let result = JSON.stringify({
-   chit_id:0,
-   timestamp:this.state.timestamp,
-   chit_content: this.state.chit_content,
-   location:{longitude:this.state.longitude,latitude:this.state.latitude},
-   user:{
-    user_id: parseInt(this.state.user_id),
-    given_name: this.state.Given_Name,
-    family_name: this.state.Family_Name,
-    email: this.state.Email
-   }
- });
-
- console.log(result);
- console.log(this.state.XAuthorization);
-
- return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
- {
-   headers: {
-     "Content-Type": "application/json",
-     "X-Authorization": this.state.XAuthorization
-   },
-   method: 'POST',
-   body: result
- })
- .then((response) => {
-  response.json()
-  this.setState({
-    server_response: response.status
+  let result = JSON.stringify({
+    chit_id:0,
+    timestamp:this.state.timestamp,
+    chit_content: this.state.chit_content,
+    location:{longitude:this.state.longitude,latitude:this.state.latitude},
+    user:{
+      user_id: parseInt(this.state.user_id),
+      given_name: this.state.Given_Name,
+      family_name: this.state.Family_Name,
+      email: this.state.Email
+    }
   });
-  //return response.json()
-})
-  .then((responseJson) => {
-      console.log("-------- Chit Posted -------------");
-      console.log("Response Status: "+this.state.server_response)
-      alert("Chit Posted!");
-      this.props.navigation.navigate('Chits');
- })
- .catch((error) =>{
-  console.log(error);
+
+  console.log(result);
+  console.log(this.state.XAuthorization);
+
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Authorization": this.state.XAuthorization
+    },
+    method: 'POST',
+    body: result
   })
+  .then((response) => {
+    response.json()
+    this.setState({
+      server_response: response.status
+    });
+    //return response.json()
+  })
+    .then((responseJson) => {
+        console.log("-------- Chit Posted -------------");
+        console.log("Response Status: "+this.state.server_response)
+        alert("Chit Posted!");
+        this.props.navigation.navigate('Chits');
+  })
+  .catch((error) =>{
+    console.log(error);
+    })
 }
 
 
@@ -158,6 +160,7 @@ getData(){
   console.log(error);
   });
 }
+
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
@@ -177,9 +180,64 @@ _retrieveTokenData = async () => {
   }
 };
 
+_retrieveImageURL = async () => {
+  console.log("--------------------Retreive Image--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('image_url');
+    if (value !== null) {
+      console.log("Post_Chits Retreived image_url: "+value);
+      this.setState({Image_URL:value});
+      console.log("Recieved Token Value is: "+this.state.Image_URL);
+      //this.getData();
+      this.post_Image_Chit2();
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
+post_Image_Chit2()
+{ 
+  console.log("Image URL 2: "+this.state.Image_URL);
+  console.log(this.state.XAuthorization);
+
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Authorization": this.state.XAuthorization
+    },
+    method: 'POST',
+    body: this.state.Image_URL
+  })
+  .then((response) => {
+    response.json()
+    this.setState({
+      server_response: response.status
+    });
+    //return response.json()
+  })
+    .then((responseJson) => {
+        console.log("-------- Chit Posted -------------");
+        console.log("Response Status: "+this.state.server_response)
+        //alert("Chit Posted!");
+        //this.props.navigation.navigate('Chits');
+  })
+  .catch((error) =>{
+    console.log(error);
+    })
+}
+post_Image_Chit()
+{ 
+  this.props.navigation.navigate('Post_Pictures')
+  //console.log("Image URL: "+this.props.navigation.state.params.image_url)
+  this._retrieveImageURL()
+  console.log("Image URL 1: "+this.state.Image_URL);
+  //this.post_Image_Chit2();
+}
 componentDidMount(){
   this.findCoordinates();
   this._retrieveTokenData();
+  //this._retrieveImageURL();
  }
  render(){
  return(
@@ -197,6 +255,7 @@ componentDidMount(){
           maxLength={141}
 
       />
+      <Button  title="Take a Picture" onPress={() => this.post_Image_Chit()}></Button>
       <Button  title="Post" onPress={() => this.postChit()} ></Button>
     </View>
   </View>
