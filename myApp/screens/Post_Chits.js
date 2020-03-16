@@ -180,6 +180,8 @@ _retrieveTokenData = async () => {
   }
 };
 
+
+
 _retrieveImageURL = async () => {
   console.log("--------------------Retreive Image--------------------------------");
   try {
