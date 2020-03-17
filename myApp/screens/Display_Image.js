@@ -22,7 +22,7 @@ Get_Image()
   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/photo",
   {
     headers: {
-      "Content-Type": "mage/png",
+      "Content-Type": "image/png",
       'Accept': 'application/json'
     },
     method: 'GET',

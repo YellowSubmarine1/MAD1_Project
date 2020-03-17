@@ -91,10 +91,9 @@ storeToken = async(token,user_id)=>{
           value={this.state.Password}
       />
       <Button  title="Login" onPress={() => this.attemptLogin(this)} ></Button>
-
-      <Text style={{color:'gray', fontSize:15, fontWeight:'bold', marginTop:15}}>Or Register</Text>
-      <Button  title="Register" onPress={() => this.props.navigation.navigate('Register')} ></Button>
+      <Button style={{marginBottom:10}}  title="Register" onPress={() => this.props.navigation.navigate('Register')} ></Button>
   </View>
+  <Text style={{color:'gray', fontSize:15, fontWeight:'bold', marginTop:15, alignSelf:'center'}} onPress={() => this.props.navigation.navigate('ViewChits')}>View Chits</Text>
 </View>
  );
  }

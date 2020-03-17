@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button, TextInput, ActivityIndicator,Image} from 'react-native';
 import {RNCamera } from 'react-native-camera';
+import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -16,6 +17,59 @@ static navigationOptions = {
     }
 }
 
+
+post_Image_Chit()
+{
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/photo",
+  {
+    headers: {
+      "Content-Type": "image/png",
+      //'Accept': 'application/json',
+      "X-Authorization":" c0c9e417baa5f71812505b962a9f5f5d"
+
+    },
+    method: 'POST',
+    body: this.state.Image_URL
+  })
+  .then((response) => {
+    console.log("Response: "+response)
+    console.log("Returned URL: "+response.url)
+    this.setState({
+      isLoading: false,
+      server_response: response.status,
+    });
+  })
+  .catch((error) =>{
+    console.log(error);
+    })
+}
+
+handleChoosePhoto= () =>{
+  console.log("Button Pressed")
+  const options ={
+    title: 'My Pictures',
+    takePhotoButtonTitle:'Select from Camera',
+    chooseFromLibraryButtonTitle:'Select from Library'
+  };
+  ImagePicker.showImagePicker(options, (response) => {
+    console.log('Response = ', response);
+  
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+    } else {
+      const source = { uri: response.uri };
+  
+      this.setState({
+        Image_URL: response.uri
+      });
+      console.log("Image URL:"+ this.state.Image_URL)
+    }
+  });
+}
 Get_Image()
 {
   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/photo",
@@ -63,7 +117,8 @@ componentDidMount(){
                   style={{width:200, height: 200, borderRadius:15, marginBottom:10}}
                   source={{uri: this.state.Image_URL}}
                 />
-      <Button  title="Set Profile Picture" onPress={() => this.postChit()} ></Button>
+      <Button  title="Choose Photo" onPress={() => this.handleChoosePhoto()} ></Button>
+      <Button  title="Post Chit" onPress={() => this.post_Image_Chit()} ></Button>
     </View>
   </View>
  );

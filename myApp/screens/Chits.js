@@ -17,9 +17,10 @@ class HomeScreen extends Component{
         Email:'',
         Chits_List: [],
         Recent_Chits:[],
-
         user_id:'',
-        XAuthorization:''
+        XAuthorization:'',
+        content: false
+ 
         }
     }
 
@@ -51,6 +52,11 @@ class HomeScreen extends Component{
    });
    }
   
+   LoadScreen(user_id)
+{
+   console.log(user_id)
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+}
    // Logout
    logout_User()
    {
@@ -138,10 +144,12 @@ class HomeScreen extends Component{
       <View style={{backgroundColor:'#9CCAE8',borderBottomWidth:1, borderBottomColor: '#ddd'}}>
         <View style={{ flexDirection:'row', borderRadius:20}}>
           <View style={{flex:1, margin:2, marginLeft:5}}>
-            <Image
-                  style={{width:50, height: 50, borderRadius:15}}
-                  source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user.user_id +"/photo"}}
-                />
+            <TouchableOpacity onPress={()=> this.LoadScreen(item.user.user_id)}>
+              <Image
+                    style={{width:50, height: 50, borderRadius:15}}
+                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user.user_id +"/photo"}}
+              />
+            </TouchableOpacity>
           </View>
 
           <View style={{flex:3}}>
@@ -168,14 +176,18 @@ class HomeScreen extends Component{
   />
 </View>
 
-<ActionButton buttonColor="rgba(231,76,60,1)">
-          <ActionButton.Item buttonColor='#3498db' title="Logout" onPress={() => this.logout_User()}>
-            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' title="Post Chits" onPress={() => this.props.navigation.navigate('Post_Chits')}>
-            <Icon name="md-done-all" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+{
+        // Display the content in screen when state object "content" is true.
+        // Hide the content in screen when state object "content" is false. 
+        this.state.content ? <ActionButton buttonColor="rgba(231,76,60,1)">
+        <ActionButton.Item buttonColor='#3498db' title="Logout" onPress={() => this.logout_User()}>
+          <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
+        <ActionButton.Item buttonColor='#1abc9c' title="Post Chits" onPress={() => this.props.navigation.navigate('Post_Chits')}>
+          <Icon name="md-done-all" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
+      </ActionButton> : null
+      }
 </View>
  );
  }

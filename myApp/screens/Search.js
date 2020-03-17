@@ -16,7 +16,8 @@ static navigationOptions = {
     email:'',
     user_id:'',
     Authorization:'',
-    server_response:''
+    server_response:'',
+    content: false
     }
 }
 
@@ -199,9 +200,13 @@ render(){
                   </View>
                 </View>
 
-                  <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center', alignSelf:'center' }} onPress={()=> this.followUser(item.user_id)}>
-                    <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Follow</Text>
-                  </TouchableOpacity>
+                {
+        // Display the content in screen when state object "content" is true.
+        // Hide the content in screen when state object "content" is false. 
+        this.state.content ?  <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center', alignSelf:'center' }} onPress={()=> this.followUser(item.user_id)}>
+        <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Follow</Text>
+      </TouchableOpacity> : null
+      }
             </View>
           </View>
         )}
