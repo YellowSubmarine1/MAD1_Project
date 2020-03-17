@@ -116,21 +116,12 @@ class HomeScreen extends Component{
  return(
   <View>
 
-      <View style={{flex:3}}>
-        <View style={{flexDirection: 'row',marginTop:40, paddingLeft:20}}>
-            <View style={{alignItems:'flex-start'}}>
-              <Text style={{fontSize:20, color:'gray'}}> Hello</Text>
-              <Text style={{fontSize:14, color:'green'}}> {this.state.Given_Name} {this.state.Family_Name} </Text>
-            </View>
-        </View>
-      </View>
-
       <View style={{flexDirection:'column'}}>
           {/* Styling for the Image*/}
-          <View style={{marginTop:25,alignItems:'flex-end', paddingRight:20}}>
+          <View style={{marginTop:25,alignItems:'center', paddingRight:20}}>
             <Image
-              source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-              style= {{width:60, height:60, borderRadius:25}}
+              source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
+              style= {{width:210, height:180, borderRadius:25}}
             />
           </View>
       </View>

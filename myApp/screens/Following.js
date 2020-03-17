@@ -129,8 +129,8 @@ _retrieveTokenData = async () => {
             <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
               <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
                 <Image
-                    style={{width:50, height: 50, marginTop:10, marginLeft:5}}
-                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                    style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}}
+                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
                   />
               </TouchableOpacity>
               <View style={{justifyContent:'center'}}>

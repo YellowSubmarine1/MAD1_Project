@@ -139,8 +139,8 @@ class HomeScreen extends Component{
         <View style={{ flexDirection:'row', borderRadius:20}}>
           <View style={{flex:1, margin:2, marginLeft:5}}>
             <Image
-                  style={{width:40, height: 40, borderRadius:15}}
-                  source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                  style={{width:50, height: 50, borderRadius:15}}
+                  source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user.user_id +"/photo"}}
                 />
           </View>
 

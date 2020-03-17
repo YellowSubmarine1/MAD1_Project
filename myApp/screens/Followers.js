@@ -13,13 +13,11 @@ export default class FollowersScreen extends Component{
         Followers_List:[],
         User_Selected: [],
         search: '',
-        user_id:''
+        user_id:'',
+        Image_URL:''
         }
     }
 
-    updateSearch = search => {
-      this.setState({ search });
-    };
   // function uses 'fetch' to call the api and return a JSON string from the server
   getData(){
    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/followers",
@@ -44,7 +42,33 @@ export default class FollowersScreen extends Component{
    console.log(error);
    });
    }
-
+   Get_Image(current_user_id)
+   {
+    let search_query= "http://10.0.2.2:3333/api/v0.0.5/user/"+current_user_id +"/photo";
+    console.log("Image Search: "+ search_query)
+     return fetch(search_query,
+     {
+       headers: {
+         "Content-Type": "mage/png",
+         'Accept': 'application/json'
+       },
+       method: 'GET',
+     })
+     .then((response) => {
+      // response.json()
+       console.log(response)
+       console.log(response.url)
+       this.setState({
+         isLoading: false,
+         server_response: response.status,
+         Image_URL:response.url    
+       });
+     })
+     .catch((error) =>{
+       console.log(error);
+       })
+   }
+   
    LoadScreen(user_id)
    {
       console.log(user_id);
@@ -65,6 +89,7 @@ export default class FollowersScreen extends Component{
       // Error retrieving data
     }
     this.getData();
+    //this.Get_Image();
   };
 
    componentDidMount(){
@@ -96,8 +121,8 @@ export default class FollowersScreen extends Component{
             <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
               <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
                 <Image
-                    style={{width:50, height: 50, marginTop:10, marginLeft:5}}
-                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                    style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}} 
+                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
                   />
               </TouchableOpacity>
               <View style={{justifyContent:'center'}}>

@@ -20,6 +20,7 @@ static navigationOptions = {
     recent_Chits: [],
     Following:'',Followers:'',
     XAuthorization: '',
+    Image_URL:''
     }
 }
 
@@ -51,6 +52,7 @@ getData(id,authuorization){
       });
       this.getFollowers();
       this.getFollowing();
+      this.Get_Image();
       console.log("User's Name:");
       console.log(this.state.given_name);
 
@@ -75,12 +77,34 @@ getData(id,authuorization){
 /// Loads page to edit user profile
 edituserProfile()
 {
-  //console.log("--------Edit Profile--------------");
-  //console.log(this.state.user_id);
-  //console.log(this.state.XAuthorization)
    this.props.navigation.navigate('Edit_User_Profile',{user_id:this.state.user_id, XAuthorization:this.state.XAuthorization}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
 }
 
+
+Get_Image()
+{
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo",
+  {
+    headers: {
+      "Content-Type": "mage/png",
+      'Accept': 'application/json'
+    },
+    method: 'GET',
+  })
+  .then((response) => {
+   // response.json()
+    console.log(response)
+    console.log(response.url)
+    this.setState({
+      isLoading: false,
+      server_response: response.status,
+      Image_URL:response.url    
+    });
+  })
+  .catch((error) =>{
+    console.log(error);
+    })
+}
 
 getFollowers(){
   let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
@@ -139,7 +163,7 @@ getFollowers(){
     console.log(error);
     });
     }
-  
+
   _retrieveTokenData = async () => {
     console.log("--------------------Retreive Token--------------------------------");
     try {
@@ -165,9 +189,6 @@ componentDidMount()
   //console.log("-------------------------------------------------------------------------");
   this._retrieveTokenData();
   console.log('User_ID:'+ this.state.user_id);
- // console.log("Selected Profile Page Reached:");
- // console.log("UserID:" +this.props.navigation.state.params.user_id);
- // console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
   this.getData(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
 } 
 
@@ -184,7 +205,7 @@ componentDidMount()
       {/* Styling for the Image*/}
       <View style={{flex:1, marginTop:10, marginLeft:5}}>
         <Image
-          source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+          source={{uri: this.state.Image_URL}}
           style= {{width:75, height:70, borderRadius:15, marginLeft:5}}
         />
       </View>
@@ -225,8 +246,8 @@ componentDidMount()
           <View style={{ flexDirection:'row', borderRadius:20}}>
             <View style={{flex:1, margin:2, marginLeft:5}}>
               <Image
-                    style={{width:40, height: 40, borderRadius:15}}
-                    source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
+                    style={{width:50, height: 50, borderRadius:15}}
+                    source={{uri: this.state.Image_URL}}
                   />
             </View>
   
