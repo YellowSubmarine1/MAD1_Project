@@ -3,8 +3,14 @@ import { createBottomTabNavigator  } from 'react-navigation-tabs';
 import { createStackNavigator  } from 'react-navigation-stack';
 
 const AppTabNav = createStackNavigator ({
+    Search_Users:{
+    screen: Search_Users
+  },
  // Display_Image:{
  //  screen:load_pic
+ // },
+ //  Set_Profile_Picture:{
+ //  screen:set_profile_pic
  // },
   Login:{
     screen: Login
@@ -67,4 +73,6 @@ import selected_User_Profile from './screens/selectedProfile'
 import Search_Users from './screens/Search'
 import post_chits from './screens/Post_Chits'
 import take_pic from './screens/TakePictures'
+
 import load_pic from './screens/Display_Image'
+import set_profile_pic from './screens/Set_Profile_Picture'

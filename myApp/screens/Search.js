@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, Image,FlatList,TextInput,AsyncStorage} from 'react-native';
+import { Text, View, Button, Image,FlatList,TextInput,AsyncStorage,TouchableOpacity} from 'react-native';
 export default class SearchScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -22,8 +22,9 @@ static navigationOptions = {
 
 searchUser()
 {
- console.log(this.state.search);
- return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" +this.state.search,
+  let user_search= "http://10.0.2.2:3333/api/v0.0.5/search_user/?q=" +this.state.search;
+ console.log("Search Query: "+user_search);
+ return fetch(user_search,
  {
    headers: {
      "Content-Type": "application/json",
@@ -36,19 +37,22 @@ searchUser()
     server_response: response.status
   });
   console.log("res: "+response)
+  console.log("Res:" + JSON.stringify(response));
+  console.log("Res status:" + JSON.stringify(response.status));
+  console.log("Res ok?:" + JSON.stringify(response.ok));
   return response.json()})
  .then((responseJson) => {
      this.setState({
      isLoading: false,
      Search_List: responseJson,
-     family_name: responseJson.family_name,
-     given_name:responseJson.given_name,
-     email: responseJson.email,
-     user_id: responseJson.user_id
+     //family_name: responseJson.family_name,
+     //given_name:responseJson.given_name,
+    // email: responseJson.email,
+    // user_id: responseJson.user_id
    });
    console.log("----------------------Results----------------------");
    console.log("Response Status: "+this.state.server_response)
-   //console.log("Response Results: "+responseJson)
+   console.log("Response Results: "+responseJson)
 
    console.log("Name: "+ this.state.given_name +" " +this.state.family_name);
    if(this.state.server_response == 200)
@@ -64,11 +68,34 @@ searchUser()
  })
 }
 
+getData(){
+  let user_search= "http://10.0.2.2:3333/api/v0.0.5/search_user/?q=" +this.state.search;
+ console.log("Search Query: "+user_search);
+  return fetch(user_search,
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: 'GET'
+  })
+ .then((response) => response.json())
+ .then((responseJson) => {
+     this.setState({
+     isLoading: false,
+     Search_List: responseJson,
+   });
+   console.log("JSON Results:");
+   console.log(responseJson);
+ })
+ .catch((error) =>{
+ console.log(error);
+ });
+ }
 
-followUser()
+followUser(current_user_id)
 {   console.log("----------------------Follow User----------------------");
- console.log(this.state.user_id);
- return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" +this.state.user_id+"/follow",
+ console.log(current_user_id);
+ return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" +current_user_id+"/follow",
  {
    headers: {
      "Content-Type": "application/json",
@@ -109,6 +136,11 @@ followUser()
   })
 }
 
+LoadScreen(user_id)
+{
+   console.log(user_id)
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+}
 _retrieveData = async () => {
   try {
     const value = await AsyncStorage.getItem('Token');
@@ -136,18 +168,47 @@ render(){
     </View>
 
     <View style={{flexDirection:'column', alignSelf:'center', paddingTop:20}}>
-      <Text style={{color:'gray', fontSize:11, width:285}}>Search User using ID:</Text>
+      <Text style={{color:'gray', fontSize:11, width:285}}>Search User:</Text>
       <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
           onChangeText={(value) => this.setState({search:value})}
       />
-      <Button  title="Search" onPress={() => this.searchUser(this)} ></Button>
+      <Button  title="Search" onPress={() => this.getData(this)} ></Button>
     </View>
 
-      <View style={{backgroundColor:'gray', fontSize:11, width:285, alignSelf:'center', marginTop:30, borderRadius:20, padding:10, height:100}}>
-        <View>
-          <Text>Search Results:</Text>
-          <Text style={{color:'red', fontSize:16}} onPress={() => this.followUser()}> {this.state.given_name } {this.state.family_name }</Text> 
-        </View>
+      <View style={{backgroundColor:'gray', fontSize:11, width:'98%', height:'58%', alignSelf:'center', marginTop:30, borderRadius:20, padding:10}}>
+        <FlatList
+          data={this.state.Search_List}
+          keyExtractor ={ item => item.user_id}
+          renderItem={({item}) => (
+            
+            <View>
+              <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'white', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
+              <View style={{flex:1}}>
+                  <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                    <Image
+                        style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}}
+                        source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
+                      />
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{flex:3, alignSelf:'center'}}>  
+                  <View style={{justifyContent:'center'}}>
+                    <Text style={{color:'green', fontSize:12}}> {item.given_name } {item.family_name }</Text> 
+                    <Text style={{color:'white',fontSize:12}}> {item.email }</Text> 
+                  </View>
+                </View>
+
+                  <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center', alignSelf:'center' }} onPress={()=> this.followUser(item.user_id)}>
+                    <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Follow</Text>
+                  </TouchableOpacity>
+            </View>
+          </View>
+        )}
+        keyExtractor={(item, index) => {
+          return item.id;
+        }}
+      />
 
     </View>
   </View>
@@ -156,6 +217,13 @@ render(){
 }
 
 /*
+
+      <View style={{backgroundColor:'gray', fontSize:11, width:285, alignSelf:'center', marginTop:30, borderRadius:20, padding:10, height:100}}>
+        <View>
+          <Text>Search Results:</Text>
+          <Text style={{color:'red', fontSize:16}} onPress={() => this.followUser()}> {this.state.given_name } {this.state.family_name }</Text> 
+        </View>
+        
     <View style={{ flex:1, flexDirection:'row', marginBottom:3} }>
       <FlatList
         data={this.state.Search_List}

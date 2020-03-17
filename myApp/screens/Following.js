@@ -125,23 +125,28 @@ _retrieveTokenData = async () => {
         data={this.state.Following_List}
         renderItem={({item}) => (
           
+            <View>
+              <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
+                <View style={{flex:1}}>
+                  <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
+                    <Image
+                        style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}}
+                        source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
+                      />
+                  </TouchableOpacity>
+                </View>
 
-            <View style={{flexDirection: 'row',borderBottomWidth:1, borderBottomColor: 'gray', paddingBottom:5, backgroundColor:'gray', marginBottom:4}}>
-              <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
-                <Image
-                    style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}}
-                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
-                  />
-              </TouchableOpacity>
-              <View style={{justifyContent:'center'}}>
-                <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
-                <Text style={{color:'white',fontSize:12}}> {item.email }</Text> 
-              </View>
+                <View style={{flex:3}}>  
+                  <View style={{justifyContent:'center'}}>
+                    <Text style={{color:'green', fontSize:16}}> {item.given_name } {item.family_name }</Text> 
+                    <Text style={{color:'white',fontSize:12}}> {item.email }</Text> 
+                  </View>
+                </View>
 
-              <View style={{flexDirection:'row-reverse'}}>
-                <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center' }} onPress={()=> this.UnFollow(item.user_id)}>
-                  <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Unfollow</Text>
-                </TouchableOpacity>
+
+                  <TouchableOpacity style={{backgroundColor:'#E91E63', width:60,height:30,borderRadius:20, justifyContent:'center', marginTop:10, marginRight:10 }} onPress={()=> this.UnFollow(item.user_id)}>
+                    <Text style={{color:'#fff', fontSize:10,alignSelf:'center'}}>Unfollow</Text>
+                  </TouchableOpacity>
               </View>
             </View>
         )}
