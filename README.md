@@ -6,15 +6,31 @@ This platform also allows users to get a taste of the experience before creating
 ## Visuals
 There are screenshots of the application below, that show how it looks, including how the application works.
 
-Login Screen
+        Login Screen
 <img src ="Images/Login_Screen.PNG" width="200">
+
+        User Profile Screen
+<img src ="Images/User_Profile.PNG" width="200">
+
+        Edit Profile Screen
+<img src ="Images/Edit_Profile.PNG" width="200">
+
+      Followers Screen
+<img src ="Images/Followers.PNG" width="200">
+
+      Following Screen
+<img src ="Images/Following.PNG" width="200">
+
+      Post Chits Screen
+<img src ="Images/Post_Chit.PNG" width="200">
+
+      View Saved Chit Drafts Screen
+<img src ="Images/Chit_Drafts.PNG" width="200">
+
+
 ## Installation
-
-Use the package manager [npm](https://www.npmjs.com/) to install packages for the App to work.
-Guide to setting up Environment before installing the Packages: https://reactnative.dev/docs/getting-started
-
-Navigate to the project folder and install the following Packages:
-
+Before showing how to run the application, you will need to install the React Native on your machine. Click [Here](https://reactnative.dev/docs/getting-started) to redirect you to instructions of how to install React Native CLI on your machine.
+Use the package manager [npm](https://www.npmjs.com/) to install packages used by the application, but before installing them, navigate using the command prompt to the 'myApp' folder and then install the packages below:
 ```bash
 npm install react-native-geolocation-service
 npm install react-native-image-picker
@@ -26,21 +42,5 @@ npm i react-native-vector-icons
 npm i react-native-action-button 
 
 ```
-
-## Usage
-
-```python
-import foobar
-
-foobar.pluralize('word') # returns 'words'
-foobar.pluralize('goose') # returns 'geese'
-foobar.singularize('phenomena') # returns 'phenomenon'
-```
-
-## Contributing
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-[MIT](https://choosealicense.com/licenses/mit/)
+## Steps to Run the Application
+After installing the packages above, to run the application first open Android Studio, open the 'android' folder inside the 'myApp' folder and run the program on an emulator. Once then emulator has finished loading, open the command prompt and navigate to the 'chittr_server_v6' folder and type npm start on the cmd. After the server is on, open another Command Prompt and navigate to the 'myApp' directory and type npx react-native run-android. This will start the application.
