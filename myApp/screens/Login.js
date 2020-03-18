@@ -21,6 +21,17 @@ storeToken = async(token,user_id,display_content)=>{
     await AsyncStorage.setItem('Token',token);
     await AsyncStorage.setItem('key2', JSON.stringify(user_id))
     await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
+
+    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+    if (retreived_chit_drafts == null){
+       // do something 
+       console.log("Key doesn't exisy");
+       var myArray = [];
+       await AsyncStorage.setItem('SaveChitDrafts', JSON.stringify(myArray))
+    }else{
+      //AsyncStorage.removeItem('SaveChitDrafts');
+      console.log("Key exists: "+JSON.stringify(retreived_chit_drafts));
+    }
     console.log("store token:" +token);
     console.log("store id:" +user_id);
     console.log("store display_content:" +display_content);

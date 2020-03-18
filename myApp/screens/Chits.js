@@ -196,6 +196,9 @@ class HomeScreen extends Component{
         <ActionButton.Item buttonColor='#1abc9c' title="Post Chits" onPress={() => this.props.navigation.navigate('Post_Chits')}>
           <Icon name="md-done-all" style={styles.actionButtonIcon} />
         </ActionButton.Item>
+        <ActionButton.Item buttonColor='#1abc9c' title="Saved Chit Drafts" onPress={() => this.props.navigation.navigate('Saved_Chits_Drafts')}>
+          <Icon name="md-done-all" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
       </ActionButton> : null
       }
 </View>

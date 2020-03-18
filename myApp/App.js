@@ -27,6 +27,12 @@ const AppTabNav = createStackNavigator ({
   Edit_User_Profile:{
     screen: Edit_Profile
   },
+  Saved_Chits_Drafts:{
+    screen: Saved_Chits_Drafts
+  },
+  Edit_Chit_Drafts:{
+    screen: edit_chit_drafts
+  },
   ViewChits:{
     screen: createBottomTabNavigator({
       Chits:{
@@ -93,3 +99,6 @@ import set_profile_pic from './screens/Set_Profile_Picture'
 
 import Search_Users_Not_Logged_In from './screens/Search_Users_Not_Logged_In'
 import View_Chits_Not_Logged_In from './screens/View_Chits_Not_Logged_In'
+
+import Saved_Chits_Drafts from './screens/Saved_Chits_Drafts'
+import edit_chit_drafts from './screens/Edit_Chit_Drafts'

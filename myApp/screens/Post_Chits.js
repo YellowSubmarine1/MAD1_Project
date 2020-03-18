@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button, TextInput, AsyncStorage,Alert,PermissionsAndroid,Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import {RNCamera } from 'react-native-camera';
+import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
@@ -167,6 +167,7 @@ _retrieveTokenData = async () => {
   try {
     const value = await AsyncStorage.getItem('Token');
     const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
     if (value !== null && key2 !== null) {
       console.log("Post_Chits Retreived Token: "+value);
       this.setState({XAuthorization:value});
@@ -174,6 +175,7 @@ _retrieveTokenData = async () => {
 
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
       console.log("Recieved User UD Value is: "+this.state.user_id);
+      console.log("Saved Chits Array List: "+retreived_chit_drafts);
       this.getData();
       this.Get_Image();
     }
@@ -181,37 +183,134 @@ _retrieveTokenData = async () => {
     // Error retrieving data
   }
 };
-Get_Image()
-{
-  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo",
-  {
-    headers: {
-      "Content-Type": "image/jpeg",
-    },
-    method: 'GET',
-  })
-  .then((response) => {
-    console.log("Result from Attempt to get Image: "+response)
-    console.log("Res:" + JSON.stringify(response.status));
-    console.log("Returned URL: "+response.url)
-    console.log("Res:" + JSON.stringify(response));
-    console.log("Res ok?:" + JSON.stringify(response.ok));
-    console.log("Returned URL 2:" + JSON.stringify(response.url));
-    this.setState({
-      isLoading: false,
-      server_response: response.status,
-      Image_URL:response.url    
-    });
-  })
-  .catch((error) =>{
-    console.log(error);
-    })
+handleChoosePhoto= () =>{
+  console.log("Button Pressed")
+  const options ={
+    title: 'My Pictures',
+    takePhotoButtonTitle:'Select from Camera',
+    chooseFromLibraryButtonTitle:'Select from Library'
+  };
+  ImagePicker.showImagePicker(options, (response) => {
+    console.log('Response = ', response);
+  
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.error) {
+      console.log('ImagePicker Error: ', response.error);
+    } else if (response.customButton) {
+      console.log('User tapped custom button: ', response.customButton);
+    } else {
+      const source = { uri: response.uri };
+  
+      this.setState({
+        Image_URL: response.uri
+      });
+      console.log("Image URL:"+ this.state.Image_URL)
+
+      console.log("Image URL: "+ this.state.Image_URL)
+      let search = "http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo";
+      return fetch(search,
+      {
+        headers: {
+          "Content-Type": "image/jpeg",
+          "X-Authorization":this.state.XAuthorization
+    
+        },
+        method: 'POST',
+        body: response
+      })
+      .then((response) => {
+        console.log("Res:" + JSON.stringify(response.status));
+        console.log("Response: "+response)
+        console.log("Returned URL: "+response.url)
+      })
+      .then((response)=>{
+        Alert.alert("Photo Added!");
+        this.props.navigation.navigate('Post_Chits',{image_url:data.url})
+      })
+      .catch((error) =>{
+        console.log(error);
+        })
+      
+    }
+  });
 }
-takePicture(){
-  console.log("Display Image:" +this.state.Display_content)
-  //this.props.navigation.navigate('Post_Pictures');
-  this.setState({Display_content:true});
-  console.log("Display Image:" +this.state.Display_content)
+
+storeChits = async()=>{
+  console.log("-----Async Post Chits ------");
+  let chitToBeSaved = {
+    chit_id:0,
+    timestamp:this.state.timestamp,
+    chit_content: this.state.chit_content,
+    location:{longitude:this.state.longitude,latitude:this.state.latitude},
+    user:{
+      user_id: parseInt(this.state.user_id),
+      given_name: this.state.Given_Name,
+      family_name: this.state.Family_Name,
+      email: this.state.Email
+    }
+  };
+
+  try{
+    const newProduct =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+    if (!newProduct) {
+      console.log("Check Existing Saved Chits: "+ newProduct)
+      newProduct = []
+    }
+    console.log("Chits Array: "+ newProduct)
+    newProduct.push(chitToBeSaved)
+
+    await AsyncStorage.setItem('SaveChitDrafts',JSON.stringify(newProduct))
+    .then( ()=>{
+      console.log('It was saved successfully')
+    })
+    .catch( ()=>{
+     console.log('There was an error saving the chit')
+    })
+  }catch(e){}
+
+
+  console.log("--------------------Retreive Chits--------------------------------");
+    try {
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+      if (retreived_chit_drafts !== null) {
+        //console.log("Post_Chits Retreived Token: "+retreived_chit_drafts);
+        console.log("Check Existing Saved Chits 1: "+ retreived_chit_drafts)
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+
+  /*try{
+    await AsyncStorage.setItem('SaveChitDrafts',JSON.stringify(newProduct))
+    .then( ()=>{
+       console.log('It was saved successfully')
+    })
+    .catch( ()=>{
+    console.log('There was an error saving the chit')
+ } )
+}catch(e){}
+*/
+  /*
+  try{
+    await AsyncStorage.setItem('SaveChitDrafts',result);
+    console.log("Saved Chit Drafts:" +result);
+  }catch(e){}
+  */
+}
+saveChit(){
+  let result = JSON.stringify({
+    chit_id:0,
+    timestamp:this.state.timestamp,
+    chit_content: this.state.chit_content,
+    location:{longitude:this.state.longitude,latitude:this.state.latitude},
+    user:{
+      user_id: parseInt(this.state.user_id),
+      given_name: this.state.Given_Name,
+      family_name: this.state.Family_Name,
+      email: this.state.Email
+    }
+  });
 }
 componentDidMount(){
   this.findCoordinates();
@@ -243,8 +342,13 @@ componentDidMount(){
           maxLength={141}
 
       />
-      <Button  title="Take a Picture" onPress={() =>  this.takePicture()}></Button>
-      <Button  title="Post" onPress={() => this.postChit()} ></Button>
+      <Button  title="Choose Photo" onPress={() => this.handleChoosePhoto()} ></Button>
+      <View style={{ paddingTop:2}}>
+        <Button  title="Post Chit" onPress={() => this.postChit()} ></Button>
+      </View>
+      <View style={{ paddingTop:2}}>
+      <Button  title="Save Chit" onPress={() => this.storeChits()} ></Button>
+      </View>
     </View>
   </View>
  );
