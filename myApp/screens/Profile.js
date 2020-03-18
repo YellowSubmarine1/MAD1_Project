@@ -68,6 +68,8 @@ getData(id,authuorization){
       console.log("User ID:");
       console.log(this.state.user_id);
 
+      console.log("Image URI"+this.state.Image_URL);
+
     })
     .catch((error) =>{
     console.log(error);
@@ -204,7 +206,7 @@ componentDidMount()
       {/* Styling for the Image*/}
       <View style={{flex:1, marginTop:10, marginLeft:5}}>
         <Image
-          source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo"}}
+          source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
           style= {{width:75, height:70, borderRadius:15, marginLeft:5}}
         />
       </View>
@@ -236,7 +238,7 @@ componentDidMount()
         <Text style={{fontSize:10}}> {this.state.email}</Text>
       </View>
   
-  
+      <View >
     <FlatList
       data={this.state.recent_Chits}
       renderItem={({item}) => (
@@ -246,7 +248,8 @@ componentDidMount()
             <View style={{flex:1, margin:2, marginLeft:5}}>
               <Image
                     style={{width:50, height: 50, borderRadius:15}}
-                    source={{uri: this.state.Image_URL}}
+                    //key={this.state.Image_URL.uri}
+                    source={this.state.Image_URL ? {uri: this.state.Image_URL } : null}
                   />
             </View>
   
@@ -272,6 +275,7 @@ componentDidMount()
         return item.id;
       }}
     />
+   </View>
    </View>
  );
  }

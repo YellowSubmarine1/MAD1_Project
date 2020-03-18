@@ -16,6 +16,7 @@ class HomeScreen extends Component{
         Email:'',
         Password:'',
         XAuthorization: '',
+        image_url:''
         }
     }
 
@@ -43,6 +44,7 @@ class HomeScreen extends Component{
         XAuthorization: authorization,
       });
       console.log(this.state.user_id);
+      this.Get_Image()
     })
     .catch((error) =>{
     console.log(error);
@@ -105,6 +107,28 @@ class HomeScreen extends Component{
     });
   }
 
+  Get_Image()
+{
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo",
+  {
+    headers: {
+      "Content-Type": "image/jpeg",
+    },
+    method: 'GET',
+  })
+  .then((response) => {
+    console.log(response)
+    console.log(response.url)
+    this.setState({
+      isLoading: false,
+      server_response: response.status,
+      image_url:response.url    
+    });
+  })
+  .catch((error) =>{
+    console.log(error);
+    })
+}
   handleChoosePhoto= () =>{
     console.log("Button Pressed")
     const options ={
@@ -125,12 +149,12 @@ class HomeScreen extends Component{
         const source = { uri: response.uri };
     
         this.setState({
-          Image_URL: response.uri
+          image_url: response.uri
         });
-        console.log("Image URL:"+ this.state.Image_URL)
+        console.log("Image URL:"+ this.state.image_url)
   
-        console.log("Image URL: "+ this.state.Image_URL)
-        return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo",
+        console.log("Image URL: "+ this.state.image_url)
+        return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
         {
           headers: {
             "Content-Type": "image/jpeg",
@@ -144,10 +168,11 @@ class HomeScreen extends Component{
           console.log("Res:" + JSON.stringify(response.status));
           console.log("Response: "+response)
           console.log("Returned URL: "+response.url)
+          this.Get_Image()
         })
         .then((response)=>{
           Alert.alert("Photo Added!");
-          this.props.navigation.navigate('Post_Chits',{image_url:data.url})
+          //this.props.navigation.navigate('Post_Chits',{image_url:data.url})
         })
         .catch((error) =>{
           console.log(error);
@@ -173,7 +198,7 @@ class HomeScreen extends Component{
           <View style={{marginTop:25,alignItems:'center', paddingRight:20}}>
           <TouchableOpacity onPress={()=> this.handleChoosePhoto()}>
             <Image
-              source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
+              source={{uri: this.state.image_url}}
               style= {{width:210, height:180, borderRadius:25}}
             />
             </TouchableOpacity>

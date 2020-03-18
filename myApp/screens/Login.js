@@ -105,6 +105,7 @@ sendDisplay_Content()
       <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
           onChangeText={(value) => this.setState({Password:value})}
           value={this.state.Password}
+          secureTextEntry={true} 
       />
       <Button  title="Login" onPress={() => this.attemptLogin(this)} ></Button>
       <Button style={{marginBottom:10}}  title="Register" onPress={() => this.props.navigation.navigate('Register')} ></Button>

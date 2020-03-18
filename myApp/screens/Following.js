@@ -59,7 +59,6 @@ UnFollow(user_id){
   })
   .then((response) => { 
       response.json();
-      this.getData(); 
     }) 
   //.then((response) => response.json())
   .then((responseJson) => {
@@ -67,6 +66,7 @@ UnFollow(user_id){
       isLoading: false,
     });
     console.log("JSON Results: "+ responseJson);
+    this.getData(); 
   })
   .catch((error) =>{
   console.log(error);
@@ -103,7 +103,7 @@ _retrieveTokenData = async () => {
 };
  componentDidMount(){
    this._retrieveTokenData()
-   //this.getData();
+   this.getData();
   } 
  render(){
    if(this.state.isLoading){

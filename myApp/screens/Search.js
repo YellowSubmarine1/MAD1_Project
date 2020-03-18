@@ -15,7 +15,7 @@ static navigationOptions = {
     given_name:'',
     email:'',
     user_id:'',
-    Authorization:'',
+    XAuthorization:'',
     server_response:'',
     content: false,
     Display_content: true,
@@ -96,12 +96,14 @@ getData(){
 
 followUser(current_user_id)
 {   console.log("----------------------Follow User----------------------");
- console.log(current_user_id);
- return fetch("http://10.0.2.2:3333/api/v0.0.5/user/" +current_user_id+"/follow",
+let follow= "http://10.0.2.2:3333/api/v0.0.5/user/" +current_user_id+"/follow";
+console.log("Token Value is: "+this.state.XAuthorization);
+ console.log(follow);
+ return fetch(follow,
  {
    headers: {
      "Content-Type": "application/json",
-     "X-Authorization": this.state.Authorization
+     "X-Authorization": this.state.XAuthorization
    },
    method: 'POST',
  })
@@ -143,27 +145,29 @@ LoadScreen(user_id)
    console.log(user_id)
    this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
 }
-_retrieveData = async () => {
+_retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
     const value = await AsyncStorage.getItem('Token');
-    const value2 = await AsyncStorage.getItem('display_content');
-    if (value !== null) {
-      console.log("Post_Chits Retreived Token: "+value);
-      console.log("Post_Chits Retreived display_content: "+value2);
+    const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+
+    console.log("Token Value is: "+value);
+    console.log("User UD Value is: "+key2);
+
+    if (value !== null && key2 !== null) {
       this.setState({XAuthorization:value});
-      this.setState({Display_content:value2});
+      this.setState({user_id:key2});
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
-      console.log("Recieved Display Value is: "+this.state.Display_content);
-      this.getData();
+      console.log("Recieved User UD Value is: "+this.state.user_id);
     }
   } catch (error) {
     // Error retrieving data
   }
+  this.getData();
 };
 componentDidMount(){
   console.log("---------  Search Profile --------------")
-  this._retrieveData();
+  this._retrieveTokenData();
  }
 
 render(){
