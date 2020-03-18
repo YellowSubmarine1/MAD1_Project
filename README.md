@@ -5,7 +5,9 @@ This platform also allows users to get a taste of the experience before creating
 
 ## Visuals
 There are screenshots of the application below, that show how it looks, including how the application works.
-<img src ="Images/Login_Screen.PNG" width:"200">
+
+Login Screen
+<img src ="Images/Login_Screen.PNG" width="200">
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com/) to install packages for the App to work.
