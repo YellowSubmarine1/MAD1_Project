@@ -1,10 +1,11 @@
 # MAD_Chittr-Project
-Chittr is a Microblogging platform which enables users to sign up for an account, search and follow other users and as well as publish 'Chits' (Short texual based) posts that are no longer than 141 characters.
-After creating an account, the user can post a profile picture which can be updated anytime using the photo's on the device or taking a photo using the phones camera.
-User's can follow their friends and collegues to be updated on their activities and know what they are 'Chitting' about.
-This platform also allows users to get a taste of the experience before creating an account and gaining access to all the features available with a member of this platform.
-Without an account, the user can view all the chits posted, search through and view the profiles of all the users on the platform.
+Chittr is a Microblogging platform that enable users to sign up for an account and publish 'Chits' (Short texual based) posts that are no longer than 141 characters.
+After creating an account, the user can post a profile picture which can be updated anytime using the photo's on the device or taking a photo using the phones camera. User's can follow their friends and collegues to be updated on their activities and know what they are 'Chitting' about. A new feature was added that allows pictures to be published.
+This platform also allows users to get a taste of the experience before creating an account. Without an account, the user can view all the chits posted, search through and view the profiles of all the users on the platform.
 
+## Visuals
+There are screenshots of the application below, that show how it looks, including how the application works.
+<img src ="Images/Login_Screen.PNG" width:"200">
 ## Installation
 
 Use the package manager [npm](https://www.npmjs.com/) to install packages for the App to work.
