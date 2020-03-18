@@ -19,7 +19,7 @@ class HomeScreen extends Component{
         Recent_Chits:[],
         user_id:'',
         XAuthorization:'',
-        Display_content: '',
+        Display_content: false,
  
         }
     }
@@ -86,21 +86,7 @@ class HomeScreen extends Component{
     {
       console.log("Please Login")
     }
-     //return response.json()
    })
- /*    .then((responseJson) => {
-         console.log("----------------------Results----------------------");
-         console.log("Response: "+responseJson)
-         console.log("Response Status: "+this.state.server_response)
-         if(this.state.server_response == 200)
-         {
-           this.props.navigation.navigate('Login');
-         }
-         elseif(this.state.server_response == 401)
-         {
-           console.log("Please Login")
-         }
-    })*/
     .catch((error) =>{
      console.log(error);
      })
@@ -109,14 +95,14 @@ class HomeScreen extends Component{
     console.log("--------------------Retreive Token--------------------------------");
     try {
       const value = await AsyncStorage.getItem('Token');
-      const value2 = await AsyncStorage.getItem('display_content');
+     // const value2 = await AsyncStorage.getItem('display_content');
       if (value !== null) {
         console.log("Post_Chits Retreived Token: "+value);
-        console.log("Post_Chits Retreived display_content: "+value2);
+       // console.log("Post_Chits Retreived display_content: "+value2);
         this.setState({XAuthorization:value});
-        this.setState({Display_content:value2});
-        console.log("Recieved Token Value is: "+this.state.XAuthorization);
-        console.log("Recieved Display Value 2 is: "+this.state.Display_content);
+       // this.setState({Display_content:value2});
+        //console.log("Recieved Token Value is: "+this.state.XAuthorization);
+        //console.log("Recieved Display Value 2 is: "+this.state.Display_content);
         this.getData();
       }
     } catch (error) {
@@ -125,10 +111,7 @@ class HomeScreen extends Component{
   };
  componentDidMount(){
    console.log("--------------- Chits ----------------")
-   //console.log("Recieve Display_Content: "+  this.props.navigation.state.params.Display_Content)
-   //this.setState({Display_Content: this.props.navigation.state.params.Display_Content});
    this._retrieveTokenData();
-  // console.log("Current Display_Content Value is 3: "+this.state.Display_content);
   // this.getData();
   } 
  render(){
@@ -141,7 +124,6 @@ class HomeScreen extends Component{
     }
  return(
   <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
-      <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {this.state.Display_content}</Text>
   <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
       <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Chits -</Text>
   </View>

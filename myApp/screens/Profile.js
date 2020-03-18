@@ -86,8 +86,7 @@ Get_Image()
   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo",
   {
     headers: {
-      "Content-Type": "mage/png",
-      'Accept': 'application/json'
+      "Content-Type": "image/jpeg",
     },
     method: 'GET',
   })
@@ -205,7 +204,7 @@ componentDidMount()
       {/* Styling for the Image*/}
       <View style={{flex:1, marginTop:10, marginLeft:5}}>
         <Image
-          source={{uri: this.state.Image_URL}}
+          source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo"}}
           style= {{width:75, height:70, borderRadius:15, marginLeft:5}}
         />
       </View>

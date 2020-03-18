@@ -17,8 +17,7 @@ static navigationOptions = {
     user_id:'',
     Authorization:'',
     server_response:'',
-    content: false,
-    Display_content: true,
+    Display_content: false,
     }
 }
 
@@ -47,10 +46,6 @@ searchUser()
      this.setState({
      isLoading: false,
      Search_List: responseJson,
-     //family_name: responseJson.family_name,
-     //given_name:responseJson.given_name,
-    // email: responseJson.email,
-    // user_id: responseJson.user_id
    });
    console.log("----------------------Results----------------------");
    console.log("Response Status: "+this.state.server_response)
@@ -147,14 +142,14 @@ _retrieveData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
     const value = await AsyncStorage.getItem('Token');
-    const value2 = await AsyncStorage.getItem('display_content');
+    //const value2 = await AsyncStorage.getItem('display_content');
     if (value !== null) {
       console.log("Post_Chits Retreived Token: "+value);
-      console.log("Post_Chits Retreived display_content: "+value2);
-      this.setState({XAuthorization:value});
-      this.setState({Display_content:value2});
+     // console.log("Post_Chits Retreived display_content: "+value2);
+     // this.setState({XAuthorization:value});
+     // this.setState({Display_content:value2});
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
-      console.log("Recieved Display Value is: "+this.state.Display_content);
+     // console.log("Recieved Display Value is: "+this.state.Display_content);
       this.getData();
     }
   } catch (error) {
@@ -170,7 +165,6 @@ render(){
  return(
   <View>
     <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
-    <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {this.state.Display_content}</Text>
       <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Follow User -</Text>
     </View>
 

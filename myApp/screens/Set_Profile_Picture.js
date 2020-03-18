@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, TextInput, ActivityIndicator,Image} from 'react-native';
+import { Text, View, Button, TextInput, ActivityIndicator,Image,Alert} from 'react-native';
 import {RNCamera } from 'react-native-camera';
 import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
@@ -24,8 +24,7 @@ post_Image_Chit()
   {
     headers: {
       "Content-Type": "image/png",
-      //'Accept': 'application/json',
-      "X-Authorization":" c0c9e417baa5f71812505b962a9f5f5d"
+      "X-Authorization":"a476d65acfc6ce1b89c66b9709f84a1"
 
     },
     method: 'POST',
@@ -67,15 +66,40 @@ handleChoosePhoto= () =>{
         Image_URL: response.uri
       });
       console.log("Image URL:"+ this.state.Image_URL)
+
+      console.log("Image URL: "+ this.state.Image_URL)
+      return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/7/photo",
+      {
+        headers: {
+          "Content-Type": "image/jpeg",
+          "X-Authorization":"6ed620bcf7d6e98bb861d4ff7c644ccf"
+    
+        },
+        method: 'POST',
+        body: response
+      })
+      .then((response) => {
+        console.log("Res:" + JSON.stringify(response.status));
+        console.log("Response: "+response)
+        console.log("Returned URL: "+response.url)
+      })
+      .then((response)=>{
+        Alert.alert("Photo Added!");
+        this.props.navigation.navigate('Post_Chits',{image_url:data.url})
+      })
+      .catch((error) =>{
+        console.log(error);
+        })
+      
     }
   });
 }
 Get_Image()
 {
-  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/photo",
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/7/photo",
   {
     headers: {
-      "Content-Type": "mage/png",
+      "Content-Type": "image/jpeg",
       'Accept': 'application/json'
     },
     method: 'GET',

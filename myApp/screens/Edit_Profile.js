@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator, Image } from 'react-native';
+import { Text, View, Button,TextInput,ActivityIndicator, Image,TouchableOpacity } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
@@ -104,6 +105,57 @@ class HomeScreen extends Component{
     });
   }
 
+  handleChoosePhoto= () =>{
+    console.log("Button Pressed")
+    const options ={
+      title: 'My Pictures',
+      takePhotoButtonTitle:'Select from Camera',
+      chooseFromLibraryButtonTitle:'Select from Library'
+    };
+    ImagePicker.showImagePicker(options, (response) => {
+      console.log('Response = ', response);
+    
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = { uri: response.uri };
+    
+        this.setState({
+          Image_URL: response.uri
+        });
+        console.log("Image URL:"+ this.state.Image_URL)
+  
+        console.log("Image URL: "+ this.state.Image_URL)
+        return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo",
+        {
+          headers: {
+            "Content-Type": "image/jpeg",
+            "X-Authorization":this.state.XAuthorization
+      
+          },
+          method: 'POST',
+          body: response
+        })
+        .then((response) => {
+          console.log("Res:" + JSON.stringify(response.status));
+          console.log("Response: "+response)
+          console.log("Returned URL: "+response.url)
+        })
+        .then((response)=>{
+          Alert.alert("Photo Added!");
+          this.props.navigation.navigate('Post_Chits',{image_url:data.url})
+        })
+        .catch((error) =>{
+          console.log(error);
+          })
+        
+      }
+    });
+  }
 
  render(){
     if(this.state.isLoading){
@@ -119,10 +171,12 @@ class HomeScreen extends Component{
       <View style={{flexDirection:'column'}}>
           {/* Styling for the Image*/}
           <View style={{marginTop:25,alignItems:'center', paddingRight:20}}>
+          <TouchableOpacity onPress={()=> this.handleChoosePhoto()}>
             <Image
               source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
               style= {{width:210, height:180, borderRadius:25}}
             />
+            </TouchableOpacity>
           </View>
       </View>
 
@@ -155,46 +209,4 @@ class HomeScreen extends Component{
  );
  }
 }
-
-/*
-<View style={{flex:1, flexDirection: 'column', flexWrap:'wrap'}}>
-
-<View style={{flex:1, marginTop:1, marginLeft:5}}>
-  <View style={{flexDirection:'column'}}>
-    <Text style={{fontSize:20,fontWeight: 'bold'} }>Edit Profile</Text>
-    <Image
-      source={{uri: 'https://reactnative.dev/img/tiny_logo.png'}}
-      style= {{width:75, height:70, borderRadius:15}}
-    />
-  </View>
-</View>
-</View>
-
-</View>
-
-    <View style={{flex:1, flexDirection: 'column', flexWrap:'wrap'}}>
-        <Text style={{width: 420, height: 60, backgroundColor: 'orange', fontWeight: 'bold'} }>Edit Profile</Text>
-        <Text>First Name:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray'}}
-            onChangeText={(value) => this.setState({Given_Name:value})}
-            value={this.state.Given_Name}
-        />
-        <Text>Family Name:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray'}}
-            onChangeText={(value) => this.setState({Family_Name:value})}
-            value={this.state.Family_Name}
-        />
-        <Text>Email:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray'}}
-            onChangeText={(value) => this.setState({Email:value})}
-            value={this.state.Email}
-        />
-        <Text>Password:</Text>
-        <TextInput style={{ height: 40, borderColor: 'gray'}}
-            onChangeText={(value) => this.setState({Password:value})}
-            secureTextEntry={true} 
-            />
-            <Button  title="Update" onPress={() => this.updateProfile(this)} ></Button>
-        </View>
-*/
 export default HomeScreen;

@@ -15,14 +15,30 @@ class LoginScreen extends Component{
         server_response:''
         }
     }
-storeToken = async(token,user_id)=>{
+storeToken = async(token,user_id,display_content)=>{
   console.log("-----Async Token ------");
   try{
     await AsyncStorage.setItem('Token',token);
     await AsyncStorage.setItem('key2', JSON.stringify(user_id))
+    await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
     console.log("store token:" +token);
     console.log("store id:" +user_id);
+    console.log("store display_content:" +display_content);
   }catch(e){}
+}
+
+sendDisplayContentValue = async(display_content)=>{
+  console.log("-----Async Token ------");
+  try{
+    await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
+    console.log("store display_content:" +display_content);
+  }catch(e){}
+}
+
+sendDisplay_Content()
+{
+  this.sendDisplayContentValue(false)
+  this.props.navigation.navigate('ViewChits');
 }
 
     attemptLogin()
@@ -62,7 +78,7 @@ storeToken = async(token,user_id)=>{
           {
             console.log("ID: "+this.state.user_id);
             console.log("Authorization: "+ this.state.XAuthorization);
-            this.storeToken(this.state.XAuthorization, this.state.user_id); // set the Authorization token
+            this.storeToken(this.state.XAuthorization, this.state.user_id,true); // set the Authorization token
             this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
           }
           else if (this.state.server_response === 400){
@@ -93,7 +109,7 @@ storeToken = async(token,user_id)=>{
       <Button  title="Login" onPress={() => this.attemptLogin(this)} ></Button>
       <Button style={{marginBottom:10}}  title="Register" onPress={() => this.props.navigation.navigate('Register')} ></Button>
   </View>
-  <Text style={{color:'gray', fontSize:15, fontWeight:'bold', marginTop:15, alignSelf:'center'}} onPress={() => this.props.navigation.navigate('ViewChits')}>View Chits</Text>
+  <Text style={{color:'gray', fontSize:15, fontWeight:'bold', marginTop:15, alignSelf:'center'}} onPress={() => this.sendDisplay_Content()}>View Chits</Text>
 </View>
  );
  }

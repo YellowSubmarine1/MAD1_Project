@@ -9,6 +9,9 @@ const AppTabNav = createStackNavigator ({
  //  Set_Profile_Picture:{
  //  screen:set_profile_pic
  // },
+   //Post_Chits:{
+ //   screen:post_chits
+ // },
   Login:{
     screen: Login
   },
@@ -27,10 +30,10 @@ const AppTabNav = createStackNavigator ({
   ViewChits:{
     screen: createBottomTabNavigator({
       Chits:{
-        screen: Chits
+        screen: View_Chits_Not_Logged_In
       },
       Search_Users:{
-        screen: Search_Users
+        screen: Search_Users_Not_Logged_In
       }
     }),
     navigationOptions: {
@@ -87,3 +90,6 @@ import take_pic from './screens/TakePictures'
 
 import load_pic from './screens/Display_Image'
 import set_profile_pic from './screens/Set_Profile_Picture'
+
+import Search_Users_Not_Logged_In from './screens/Search_Users_Not_Logged_In'
+import View_Chits_Not_Logged_In from './screens/View_Chits_Not_Logged_In'

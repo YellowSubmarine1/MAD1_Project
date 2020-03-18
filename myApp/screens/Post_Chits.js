@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button, TextInput, AsyncStorage,Alert,PermissionsAndroid} from 'react-native';
+import { Text, View, Button, TextInput, AsyncStorage,Alert,PermissionsAndroid,Image} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {RNCamera } from 'react-native-camera';
 class HomeScreen extends Component{
@@ -26,7 +26,8 @@ static navigationOptions = {
     location:[],
     locationPermission: false,
     server_response:'',
-    Image_URL:''
+    Image_URL:'',
+    Display_content:false
     }
 }
 async requestLocationPermission(){
@@ -174,72 +175,47 @@ _retrieveTokenData = async () => {
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
       console.log("Recieved User UD Value is: "+this.state.user_id);
       this.getData();
+      this.Get_Image();
     }
   } catch (error) {
     // Error retrieving data
   }
 };
-
-
-
-_retrieveImageURL = async () => {
-  console.log("--------------------Retreive Image--------------------------------");
-  try {
-    const value = await AsyncStorage.getItem('image_url');
-    if (value !== null) {
-      console.log("Post_Chits Retreived image_url: "+value);
-      this.setState({Image_URL:value});
-      console.log("Recieved Token Value is: "+this.state.Image_URL);
-      //this.getData();
-      this.post_Image_Chit2();
-    }
-  } catch (error) {
-    // Error retrieving data
-  }
-};
-post_Image_Chit2()
-{ 
-  console.log("Image URL 2: "+this.state.Image_URL);
-  console.log(this.state.XAuthorization);
-
-  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits",
+Get_Image()
+{
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo",
   {
     headers: {
-      "Content-Type": "application/json",
-      "X-Authorization": this.state.XAuthorization
+      "Content-Type": "image/jpeg",
     },
-    method: 'POST',
-    body: this.state.Image_URL
+    method: 'GET',
   })
   .then((response) => {
-    response.json()
+    console.log("Result from Attempt to get Image: "+response)
+    console.log("Res:" + JSON.stringify(response.status));
+    console.log("Returned URL: "+response.url)
+    console.log("Res:" + JSON.stringify(response));
+    console.log("Res ok?:" + JSON.stringify(response.ok));
+    console.log("Returned URL 2:" + JSON.stringify(response.url));
     this.setState({
-      server_response: response.status
+      isLoading: false,
+      server_response: response.status,
+      Image_URL:response.url    
     });
-    //return response.json()
-  })
-    .then((responseJson) => {
-        console.log("-------- Chit Posted -------------");
-        console.log("Response Status: "+this.state.server_response)
-        //alert("Chit Posted!");
-        //this.props.navigation.navigate('Chits');
   })
   .catch((error) =>{
     console.log(error);
     })
 }
-post_Image_Chit()
-{ 
-  this.props.navigation.navigate('Post_Pictures')
-  //console.log("Image URL: "+this.props.navigation.state.params.image_url)
-  this._retrieveImageURL()
-  console.log("Image URL 1: "+this.state.Image_URL);
-  //this.post_Image_Chit2();
+takePicture(){
+  console.log("Display Image:" +this.state.Display_content)
+  //this.props.navigation.navigate('Post_Pictures');
+  this.setState({Display_content:true});
+  console.log("Display Image:" +this.state.Display_content)
 }
 componentDidMount(){
   this.findCoordinates();
   this._retrieveTokenData();
-  //this._retrieveImageURL();
  }
  render(){
  return(
@@ -250,6 +226,16 @@ componentDidMount(){
 
     <View style={{flexDirection:'column', alignSelf:'center', paddingTop:20}}>
       <Text style={{color:'gray', fontSize:11, width:285}}>Enter Chits:</Text>
+      {
+        // Display the content in screen when state object "content" is true.
+        // Hide the content in screen when state object "content" is false. 
+        this.state.Display_content ? 
+        <Image
+              style={{width:200, height: 100, borderRadius:15, marginBottom:10}}
+              source={{uri: this.state.Image_URL}}
+          />: null
+      }
+
       <TextInput style={{ height: 140, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
           onChangeText={(value) => this.setState({chit_content:value})}
           multiline={true}
@@ -257,7 +243,7 @@ componentDidMount(){
           maxLength={141}
 
       />
-      <Button  title="Take a Picture" onPress={() => this.post_Image_Chit()}></Button>
+      <Button  title="Take a Picture" onPress={() =>  this.takePicture()}></Button>
       <Button  title="Post" onPress={() => this.postChit()} ></Button>
     </View>
   </View>
