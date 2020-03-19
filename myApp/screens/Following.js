@@ -79,8 +79,7 @@ UnFollow(user_id){
      this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
   }
 
-//----------
-
+// Async Function retrieves the user_id, token of the user current logged in from the Async Storage
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {

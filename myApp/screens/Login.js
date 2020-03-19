@@ -101,7 +101,7 @@ attemptLogin()
         this.storeToken(this.state.XAuthorization, this.state.user_id,true); // Calls the Async Storage to store the returned Token and User_ID
         this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});    // After Tokens are returned and login is successful, then the user gain access to the 'Chits' page.
       }
-      else if (this.state.server_response == 400){
+      if (this.state.server_response == 400){
         alert("Incorrect Email or Password, try again");
       }
   })

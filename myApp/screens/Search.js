@@ -69,7 +69,7 @@ searchUser()
  console.log(error);
  })
 }
-
+// Function takes the user input from the TextInput and does a query search for users that match the search query to follow, the results are stored in 'Search_List' array and displayed in a Flat List.
 getData(){
   let user_search= "http://10.0.2.2:3333/api/v0.0.5/search_user/?q=" +this.state.search;
  console.log("Search Query: "+user_search);
@@ -84,7 +84,7 @@ getData(){
  .then((responseJson) => {
      this.setState({
      isLoading: false,
-     Search_List: responseJson,
+     Search_List: responseJson, // returned user's are stored in a state array variable
    });
    console.log("JSON Results:");
    console.log(responseJson);
@@ -94,6 +94,7 @@ getData(){
  });
  }
 
+ // Function is used to allow the currently logged in user to follow users from the flatlist. It takes the selected user's User_ID as input and posts a Post request to follow that user using the selected user_id.
 followUser(current_user_id)
 {   console.log("----------------------Follow User----------------------");
 let follow= "http://10.0.2.2:3333/api/v0.0.5/user/" +current_user_id+"/follow";
@@ -140,11 +141,15 @@ console.log("Token Value is: "+this.state.XAuthorization);
   })
 }
 
+  // Function takes the user_id of the user selected in the FlatList and loads their profile page
 LoadScreen(user_id)
 {
    console.log(user_id)
    this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
 }
+
+
+// Async Tasks is used to retrieve the Token and User_ID of the user logged in from the async storage and stores them in state variables to be used whenever the current user wants to follow another user.
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {

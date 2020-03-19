@@ -22,6 +22,22 @@ class HomeScreen extends Component{
  
         }
     }
+// Async Function is used to retrieve the Authorization Token for the current user and the value to Whether or not to display the Action-Bar
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('Token');  // retrieve the Token
+    const value2 = await AsyncStorage.getItem('display_content'); // retrieves the value to Whether or not to display the Action-Bar
+    if (value !== null && value2 !== null) { 
+      this.setState({XAuthorization:value,Display_content:value2});
+      console.log("Recieved Token Value is: "+this.state.XAuthorization);
+      console.log("Recieved Display Value 2 is: "+this.state.Display_content);
+      this.getData();
+    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
 
 // function used to get all the Chits that have been published from the Server
   getData()
@@ -89,22 +105,7 @@ logout_User()
       console.log(error);
     })
 }
-// Async Function is used to retrieve the Authorization Token for the current user and the value to Whether or not to display the Action-Bar
-_retrieveTokenData = async () => {
-  console.log("--------------------Retreive Token--------------------------------");
-  try {
-    const value = await AsyncStorage.getItem('Token');  // retrieve the Token
-    const value2 = await AsyncStorage.getItem('display_content'); // retrieves the value to Whether or not to display the Action-Bar
-    if (value !== null && value2 !== null) { 
-      this.setState({XAuthorization:value,Display_content:value2});
-      console.log("Recieved Token Value is: "+this.state.XAuthorization);
-      console.log("Recieved Display Value 2 is: "+this.state.Display_content);
-      this.getData();
-    }
-  } catch (error) {
-    // Error retrieving data
-  }
-};
+
  componentDidMount(){
    console.log("--------------- Chits ----------------")
    this._retrieveTokenData();

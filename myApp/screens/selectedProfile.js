@@ -20,9 +20,10 @@ static navigationOptions = {
     Following:'',Followers:''
     }
 }
+
+// Returns all the details of the selected user from the Flatlist in the Following, Chits, Followers and Search page.
 getData(){
-    //console.log("Select User Page Loaded: "+this.props.navigation.state.params.user_id)
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id;
+    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id; // retreives the user_id
     console.log('Get Request');
     console.log(result);
     return fetch(result,
@@ -34,6 +35,7 @@ getData(){
     })
     .then((response) => response.json())
     .then((responseJson) => {
+      // The returned user details of the current user_id and saves them on state variables.
         this.setState({
         isLoading: false,
         User_Profile: responseJson,
@@ -55,6 +57,7 @@ getData(){
 
       console.log("User ID:");
       console.log(this.state.user_id);
+      // Calls the getFollowers & getFollowing function which returns all the followers and following list for this user_id
       this.getFollowers();
       this.getFollowing();
     })
@@ -63,7 +66,8 @@ getData(){
     });
     }
 
-
+// This function uses the User_ID of the selected user and then returns all the followers of that user in an array,
+// stores the number of followers for this user which are then displayed on the page.
     getFollowers(){
       let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/followers";
       console.log('Request: ');
@@ -80,7 +84,7 @@ getData(){
       .then((responseJson) => {
           this.setState({
           isLoading: false,
-          Followers: responseJson.length
+          Followers: responseJson.length // the number of user's in the array are stored
         });
         console.log("JSON Results:");
         console.log(responseJson);
@@ -93,6 +97,9 @@ getData(){
       console.log(error);
       });
       }
+
+// This function uses the User_ID of the selected user and then returns all the users the selected user_id follows in an array,
+// it stores the number of people this user is following and displays them on the page.
 
       getFollowing(){
         let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
@@ -109,7 +116,7 @@ getData(){
         .then((responseJson) => {
             this.setState({
             isLoading: false,
-            Following: responseJson.length
+            Following: responseJson.length  // the number of user's in the array are stored
           });
           console.log("JSON Results:");
           console.log(responseJson);

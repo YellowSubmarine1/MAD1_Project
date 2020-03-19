@@ -30,7 +30,6 @@ class LoginScreen extends Component{
      });
  
      console.log(account);
- 
      return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
      {
        headers: {
@@ -39,20 +38,17 @@ class LoginScreen extends Component{
        method: 'POST',
        body: account
      })
-     .then((response) => response.json())
-     .then((responseJson) => {
-         this.setState({
-         isLoading: false,
-         responseMade: responseJson,
-         result: 'Account Made',
-       });
-       console.log("JSON Results:");
-       console.log(this.state.responseMade);
-       alert('Account Created, Please Login');
-     })
-     .then((response)=>{
-      this.props.navigation.navigate('Login');
-     })
+     .then((response) => {
+      let server_response = JSON.stringify(response.status);
+      if(server_response == 201)
+      {
+        console.log("JSON Results: "+server_response);
+        alert('Account Created, Please Login');
+        this.props.navigation.navigate('Login');
+      }
+      if(server_response == 400){
+        alert("Account not created, Please try again");
+      }})
      .catch((error) =>{
      console.log(error);
      });

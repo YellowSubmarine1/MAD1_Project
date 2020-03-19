@@ -15,21 +15,25 @@ export default class FollowersScreen extends Component{
         }
     }
 
+  // Async Function retrieves the user_id, token and the array used to store the chit Drafts for the current user from Async Storage
    _retrieveTokenData = async () => {
     console.log("--------------------Retreive Chits Drafts--------------------------------");
     try {
-      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
-      const key = key2+'SaveChitsDrafts';  // Generates a unique Chit Draft Key for all the users 
-      console.log("Key for Chit Drafts:"+key )
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;  // gets the user_id of the current user
+      const key = key2+'SaveChitsDrafts';  // variable is the key to retreive the array containing the Chit Drafts from the Async Storage
 
-      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ; // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
       const token = await AsyncStorage.getItem('Token');
       console.log("Check Existing Saved Chits: "+ retreived_chit_drafts)
       console.log("Recieved Saved Drafts: "+JSON.stringify( retreived_chit_drafts));
+     
+      // Checks to see that the 'retreived_chit_drafts' array isnt null and contains chit drafts, that the token and user_id are not null before assigning them to a state variable 
       if (retreived_chit_drafts !== null && token !==null) {
-        this.setState({XAuthorization:token});
-        this.setState({Chit_Draft_Key:key});
-        this.setState({saved_Chits_Drafts:retreived_chit_drafts});
+        this.setState({
+          XAuthorization:token,
+          Chit_Draft_Key:key,
+          saved_Chits_Drafts:retreived_chit_drafts
+        });
         console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
         console.log("Chits Value is: "+JSON.stringify( this.state.saved_Chits_Drafts));
         console.log("Recieved Token Value is: "+this.state.XAuthorization);
@@ -40,6 +44,7 @@ export default class FollowersScreen extends Component{
     }
   };
 
+  // Function is used to update the chit Draft array in the Async Storage 
   storeUpdated_Chits = async(updated_Drafts)=>{
     console.log("-----Async Token ------");
     try{
@@ -49,7 +54,7 @@ export default class FollowersScreen extends Component{
   }
 
 
-  // I can Remove Item from the Array List
+  // Function Removes selected Item from the Array and updates the chit Draft Array in the Async Storage
   removeDraft(selected_chit){
     console.log("Remove Draft:"+JSON.stringify(selected_chit));
       const index = this.state.saved_Chits_Drafts.indexOf(selected_chit);
@@ -59,10 +64,10 @@ export default class FollowersScreen extends Component{
 
       console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
       this.storeUpdated_Chits(this.state.saved_Chits_Drafts)
-      this._retrieveTokenData()
+      this._retrieveTokenData() // used to refresh the page and display the updated list of Chit Drafts saved
     }
 
-
+// Function is used to Edit the selected chit Draft in the Array, get the index value of the chit, passes the chit and index value to the page where the chit content can be updated
   editDraft(selected_chit){
     console.log("--------------Edit Chit-------------------")
       console.log("selected Draft:"+JSON.stringify(selected_chit.chit_content));
@@ -92,9 +97,27 @@ export default class FollowersScreen extends Component{
         body: JSON.stringify(selected_chit)
       })
       .then((response) => {
+        let server_response = JSON.stringify(response.status);
+        if(server_response == 201)
+        {
+          console.log("-------- Update Made -------------");
+          this.state.saved_Chits_Drafts.splice(index,1);
+    
+          console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
+          this.storeUpdated_Chits(this.state.saved_Chits_Drafts)
+          console.log("-------- Chit Posted -------------");
+          console.log("Response Status: "+server_response)
+          alert("Chit Posted!");
+          this.props.navigation.navigate('Chits');
+        }
+        if(server_response == 401){
+          alert("Unauthorized, Please Login");
+        }})
+    /*  .then((response) => {
         response.json()
       })
-        .then((responseJson) => {
+      */
+    /*    .then((responseJson) => {
           this.state.saved_Chits_Drafts.splice(index,1);
     
           console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
@@ -105,6 +128,7 @@ export default class FollowersScreen extends Component{
             alert("Chit Posted!");
             this.props.navigation.navigate('Chits');
       })
+      */
       .catch((error) =>{
         console.log(error);
         })

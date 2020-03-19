@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Button,TextInput,ActivityIndicator, Image,TouchableOpacity } from 'react-native';
+import { Text, View, Button,TextInput,ActivityIndicator, Image,TouchableOpacity,AsyncStorage, Alert } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
     // removes the header from the page
@@ -20,45 +20,65 @@ class HomeScreen extends Component{
         }
     }
 
-     // function uses 'fetch' to call the api and return a JSON string from the server
-    getData(user, authorization){
-      console.log('-------------------------------------');
-      console.log('Edit Profile');
-      console.log(user);
-      let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ user;
-    return fetch(result, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json, text/plain, */*',  // It can be used to overcome cors errors
-          'Content-Type': 'application/json'
-        }})
-    .then((response) => response.json())
-    .then((responseJson) => {
-        console.log(0,responseJson)
-        this.setState({
-        isLoading: false,
-        Given_Name: responseJson.given_name,
-        Family_Name: responseJson.family_name,
-        Email: responseJson.email,
-        user_id: responseJson.user_id,
-        XAuthorization: authorization,
+// Async Tasks is used to retrieve the Token and User_ID of the user logged in from the async storage and then do a get request which retreives the details of the current user using the user_id
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token & User_ID--------------------------------");
+  try {
+    // gets the Token and User_ID from async storage, asigns them to state variables to use later to update the user profile.
+      const authorization_Token = await AsyncStorage.getItem('Token');
+      const new_user_id =JSON.parse(await AsyncStorage.getItem('key2')) ;
+      console.log("Retreived Token: "+authorization_Token);
+      console.log("Retreived User_ID: "+new_user_id);
+      this.setState({XAuthorization: authorization_Token, user_id:new_user_id});
+
+      let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ new_user_id;
+      return fetch(result, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          }})
+          .then((response) => {
+            let server_response = JSON.stringify(response.status);
+
+            if(server_response == 404)
+            {
+              Alert.alert("User Not Found");
+            }else
+            {
+              console.log("Respose: "+ server_response)
+              console.log("res: "+ JSON.stringify(response))
+              return response.json()
+            }
+          })
+      .then((responseJson) => {
+          console.log("Response Code: "+JSON.stringify(responseJson))
+          // stores the details returned from the server and displays them on the TextInput so that the user can update them.
+          this.setState({
+          isLoading: false,
+          Given_Name: responseJson.given_name,
+          Family_Name: responseJson.family_name,
+          Email: responseJson.email,
+          user_id: responseJson.user_id,
+        });
+        // Loads the profile picture of the current user.
+        this.Get_Image()
+      })
+      .catch((error) =>{
+      console.log(error);
       });
-      console.log(this.state.user_id);
-      this.Get_Image()
-    })
-    .catch((error) =>{
-    console.log(error);
-    });
-    }
+  } catch (error) {
+    // Error retrieving data
+  }
+};
+
   componentDidMount(){
     console.log("-------------------------------------------------------------------------");
     console.log("Selected Profile Page Reached:");
-    console.log("UserID:" +this.props.navigation.state.params.user_id);
-    console.log("Authenication:" +this.props.navigation.state.params.XAuthorization);
-    this.getData(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
+    this._retrieveTokenData();
    }
-
-   updateProfile()
+// Function is used to update the profile details of the user logged in, it takes the details entered from the TextInput,
+// converts to JSON string object and updates the user's details.
+updateProfile()
    {
     let result = JSON.stringify({
       given_name: this.state.Given_Name,
@@ -80,34 +100,28 @@ class HomeScreen extends Component{
       body: result
     })
     .then((response) => {
-      console.log("Res:" + JSON.stringify(response));
-      console.log("Res status:" + JSON.stringify(response.status));
-      console.log("Res ok?:" + JSON.stringify(response.ok));
-      this.setState({
-        server_response: response.status,
-      });
-      return response.json()
-    })
-    .then((responseJson) => {
-
-      if(this.state.server_response == 201)
+      let server_response = JSON.stringify(response.status);
+      if(server_response == 201)
       {
         console.log("-------- Update Made -------------");
-        console.log('Server Response: '+ responseJson);
+        console.log('Server Response: '+ server_response);
         alert("Profile Updated!");
         console.log('Updates made');
         this.props.navigation.navigate('Profile');
       }
-      else if (this.state.server_response === 404){
+      if(server_response == 404){
         alert("Update not made");
       }
-    })
+      if(server_response == 401){
+        alert("Unauthorized, Please Login");
+      }})
     .catch((error) => {
       console.error(error);
     });
   }
 
-  Get_Image()
+// Function is used to get the profile picture of the current user.
+Get_Image()
 {
   return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo",
   {
@@ -121,7 +135,6 @@ class HomeScreen extends Component{
     console.log(response.url)
     this.setState({
       isLoading: false,
-      server_response: response.status,
       image_url:response.url    
     });
   })
@@ -129,6 +142,9 @@ class HomeScreen extends Component{
     console.log(error);
     })
 }
+
+// Function is run whenever the user presses on the Profile Picture of the user,
+// it opens the image picker giving the user the option of taking a picture or selecting an image from the library to change the profile picture of the user.
   handleChoosePhoto= () =>{
     console.log("Button Pressed")
     const options ={
@@ -136,6 +152,7 @@ class HomeScreen extends Component{
       takePhotoButtonTitle:'Select from Camera',
       chooseFromLibraryButtonTitle:'Select from Library'
     };
+    // Displays the optons to the user.
     ImagePicker.showImagePicker(options, (response) => {
       console.log('Response = ', response);
     
@@ -151,15 +168,12 @@ class HomeScreen extends Component{
         this.setState({
           image_url: response.uri
         });
-        console.log("Image URL:"+ this.state.image_url)
-  
-        console.log("Image URL: "+ this.state.image_url)
+        // sets the profile picture of the current user to the new image taken/ selected
         return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
         {
           headers: {
             "Content-Type": "image/jpeg",
             "X-Authorization":this.state.XAuthorization
-      
           },
           method: 'POST',
           body: response
@@ -168,11 +182,10 @@ class HomeScreen extends Component{
           console.log("Res:" + JSON.stringify(response.status));
           console.log("Response: "+response)
           console.log("Returned URL: "+response.url)
-          this.Get_Image()
+          this.Get_Image()  // loads and displays the new image.
         })
         .then((response)=>{
           Alert.alert("Photo Added!");
-          //this.props.navigation.navigate('Post_Chits',{image_url:data.url})
         })
         .catch((error) =>{
           console.log(error);

@@ -17,7 +17,7 @@ export default class FollowersScreen extends Component{
         }
     }
 
-  // function uses 'fetch' to call the api and return a JSON string from the server
+  // function is used to return all the followers of the user currently logged in and Store them in an Array variable to display all the followers in the FlatList
   getData(){
    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/followers",
    {
@@ -41,6 +41,8 @@ export default class FollowersScreen extends Component{
    console.log(error);
    });
    }
+  
+   // Function takes the user_ID each follower in the FlatList and returns the URI of the profile pictures which will be displayed.
    Get_Image(current_user_id)
    {
     let search_query= "http://10.0.2.2:3333/api/v0.0.5/user/"+current_user_id +"/photo";
@@ -60,7 +62,7 @@ export default class FollowersScreen extends Component{
        this.setState({
          isLoading: false,
          server_response: response.status,
-         Image_URL:response.url    
+         Image_URL:response.url    // saves the image URI
        });
      })
      .catch((error) =>{
@@ -68,14 +70,15 @@ export default class FollowersScreen extends Component{
        })
    }
    
+   // Function takes the user_id of the user selected in the FlatList and loads their profile page
    LoadScreen(user_id)
    {
       console.log(user_id);
       this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
    }
 
+   // Async Function is used to retreive the user_id of the user currently logged in and stores it in a state variable
    _retrieveTokenData = async () => {
-    console.log("--------------------Retreive Token--------------------------------");
     try {
       const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
 
