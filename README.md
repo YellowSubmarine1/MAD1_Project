@@ -43,4 +43,27 @@ npm i react-native-action-button
 
 ```
 ## Steps to Run the Application
-After installing the packages above, to run the application first open Android Studio, open the 'android' folder inside the 'myApp' folder and run the program on an emulator. Once then emulator has finished loading, open the command prompt and navigate to the 'chittr_server_v6' folder and type npm start on the cmd. After the server is on, open another Command Prompt and navigate to the 'myApp' directory and type npx react-native run-android. This will start the application.
+I will now guide you through how to run the application below.
+
+<img src ="Images/Open_Android_Folder.PNG" width="200">
+
+
+After installing the packages above, to run the application first run Android Studio, open the 'android' folder inside the 'myApp' folder and run the program on an emulator.
+
+
+<img src ="Images/Run_Android_Project.PNG" width="200">
+The App has finished loading on the emulator.
+
+
+Start the Server
+
+<img src ="Images/Start_Server.PNG" width="200">
+
+Once then emulator has finished loading, open the command prompt and navigate to the 'chittr_server_v6' folder and type npm start on the cmd.
+
+
+
+<img src ="Images/Run_App.PNG" width="200">
+After the server is on, open another Command Prompt, navigate to the 'myApp' project directory and type npx react-native run-android. This will start the application and the Login Page will be displayed on the screen.
+
+<img src ="Images/Login_Screen.PNG" width="200">
