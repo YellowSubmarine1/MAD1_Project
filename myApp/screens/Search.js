@@ -18,7 +18,7 @@ static navigationOptions = {
     XAuthorization:'',
     server_response:'',
     content: false,
-    Display_content: true,
+    Display_content: false,
     }
 }
 
@@ -150,6 +150,7 @@ _retrieveTokenData = async () => {
   try {
     const value = await AsyncStorage.getItem('Token');
     const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+    const value2 = await AsyncStorage.getItem('display_content');
 
     console.log("Token Value is: "+value);
     console.log("User UD Value is: "+key2);
@@ -157,6 +158,8 @@ _retrieveTokenData = async () => {
     if (value !== null && key2 !== null) {
       this.setState({XAuthorization:value});
       this.setState({user_id:key2});
+      this.setState({Display_content:value2});
+      console.log("Recieved Display Value 2 is: "+this.state.Display_content);
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
       console.log("Recieved User UD Value is: "+this.state.user_id);
     }
@@ -165,6 +168,8 @@ _retrieveTokenData = async () => {
   }
   this.getData();
 };
+
+
 componentDidMount(){
   console.log("---------  Search Profile --------------")
   this._retrieveTokenData();
@@ -174,7 +179,6 @@ render(){
  return(
   <View>
     <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
-    <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {this.state.Display_content}</Text>
       <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Follow User -</Text>
     </View>
 

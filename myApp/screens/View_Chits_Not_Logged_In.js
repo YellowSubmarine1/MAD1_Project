@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View,ActivityIndicator,FlatList,Image,TouchableOpacity,StyleSheet, AsyncStorage } from 'react-native';
-import { FloatingAction } from "react-native-floating-action";
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 class HomeScreen extends Component{

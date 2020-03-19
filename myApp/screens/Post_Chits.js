@@ -27,7 +27,8 @@ static navigationOptions = {
     locationPermission: false,
     server_response:'',
     Image_URL:'',
-    Display_content:false
+    Display_content:false,
+    Chit_Draft_Key:''
     }
 }
 async requestLocationPermission(){
@@ -167,12 +168,14 @@ _retrieveTokenData = async () => {
   try {
     const value = await AsyncStorage.getItem('Token');
     const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
-    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+    const key = key2+'SaveChitsDrafts';  // Generates a unique Chit Draft Key for all the users 
+    console.log("Key for Chit Drafts:"+key )
+    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
     if (value !== null && key2 !== null) {
       console.log("Post_Chits Retreived Token: "+value);
       this.setState({XAuthorization:value});
-      this.setState({user_id:key2});
-
+      this.setState({user_id:key2, Chit_Draft_Key:key});
+      console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
       console.log("Recieved User UD Value is: "+this.state.user_id);
       console.log("Saved Chits Array List: "+retreived_chit_drafts);
@@ -202,12 +205,11 @@ handleChoosePhoto= () =>{
     } else {
       const source = { uri: response.uri };
   
-      this.setState({
-        Image_URL: response.uri
-      });
+   //   this.setState({
+   //     Image_URL: response.uri,
+   //     Display_content: true
+   //   });
       console.log("Image URL:"+ this.state.Image_URL)
-
-      console.log("Image URL: "+ this.state.Image_URL)
       let search = "http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo";
       return fetch(search,
       {
@@ -223,10 +225,12 @@ handleChoosePhoto= () =>{
         console.log("Res:" + JSON.stringify(response.status));
         console.log("Response: "+response)
         console.log("Returned URL: "+response.url)
+        this.setState({Image_URL: response.url,        Display_content: true})
+        console.log("Returned Image URL: "+this.state.Image_URL)
       })
       .then((response)=>{
         Alert.alert("Photo Added!");
-        this.props.navigation.navigate('Post_Chits',{image_url:data.url})
+        //this.props.navigation.navigate('Post_Chits',{image_url:data.url})
       })
       .catch((error) =>{
         console.log(error);
@@ -252,7 +256,7 @@ storeChits = async()=>{
   };
 
   try{
-    const newProduct =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+    const newProduct =JSON.parse(await AsyncStorage.getItem(this.state.Chit_Draft_Key)) ;
     if (!newProduct) {
       console.log("Check Existing Saved Chits: "+ newProduct)
       newProduct = []
@@ -260,9 +264,11 @@ storeChits = async()=>{
     console.log("Chits Array: "+ newProduct)
     newProduct.push(chitToBeSaved)
 
-    await AsyncStorage.setItem('SaveChitDrafts',JSON.stringify(newProduct))
+    await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(newProduct))
     .then( ()=>{
+      alert("Chit Draft Created and Saved !");
       console.log('It was saved successfully')
+      this.props.navigation.navigate('Chits');
     })
     .catch( ()=>{
      console.log('There was an error saving the chit')
@@ -272,7 +278,7 @@ storeChits = async()=>{
 
   console.log("--------------------Retreive Chits--------------------------------");
     try {
-      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(this.state.Chit_Draft_Key)) ;
       if (retreived_chit_drafts !== null) {
         //console.log("Post_Chits Retreived Token: "+retreived_chit_drafts);
         console.log("Check Existing Saved Chits 1: "+ retreived_chit_drafts)
@@ -280,41 +286,13 @@ storeChits = async()=>{
     } catch (error) {
       // Error retrieving data
     }
+}
 
-  /*try{
-    await AsyncStorage.setItem('SaveChitDrafts',JSON.stringify(newProduct))
-    .then( ()=>{
-       console.log('It was saved successfully')
-    })
-    .catch( ()=>{
-    console.log('There was an error saving the chit')
- } )
-}catch(e){}
-*/
-  /*
-  try{
-    await AsyncStorage.setItem('SaveChitDrafts',result);
-    console.log("Saved Chit Drafts:" +result);
-  }catch(e){}
-  */
-}
-saveChit(){
-  let result = JSON.stringify({
-    chit_id:0,
-    timestamp:this.state.timestamp,
-    chit_content: this.state.chit_content,
-    location:{longitude:this.state.longitude,latitude:this.state.latitude},
-    user:{
-      user_id: parseInt(this.state.user_id),
-      given_name: this.state.Given_Name,
-      family_name: this.state.Family_Name,
-      email: this.state.Email
-    }
-  });
-}
+
 componentDidMount(){
   this.findCoordinates();
   this._retrieveTokenData();
+  this.setState({Image_URL:''});
  }
  render(){
  return(

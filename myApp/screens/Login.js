@@ -17,19 +17,21 @@ class LoginScreen extends Component{
     }
 storeToken = async(token,user_id,display_content)=>{
   console.log("-----Async Token ------");
+  const key = user_id+'SaveChitsDrafts';  // Generates a unique Chit Draft Key for all the users 
+  console.log("Key for Chit Drafts:"+key )
   try{
     await AsyncStorage.setItem('Token',token);
     await AsyncStorage.setItem('key2', JSON.stringify(user_id))
     await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
 
-    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem('SaveChitDrafts')) ;
+    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
     if (retreived_chit_drafts == null){
        // do something 
        console.log("Key doesn't exisy");
        var myArray = [];
-       await AsyncStorage.setItem('SaveChitDrafts', JSON.stringify(myArray))
+       await AsyncStorage.setItem(key, JSON.stringify(myArray))
     }else{
-      //AsyncStorage.removeItem('SaveChitDrafts');
+      //AsyncStorage.removeItem(key);
       console.log("Key exists: "+JSON.stringify(retreived_chit_drafts));
     }
     console.log("store token:" +token);

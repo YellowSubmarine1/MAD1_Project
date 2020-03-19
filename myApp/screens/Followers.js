@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Text, View,ActivityIndicator,FlatList, StyleSheet, Image,TouchableOpacity, AsyncStorage } from 'react-native';
-import SearchBar from 'react-native-search-bar';
 export default class FollowersScreen extends Component{
     // removes the header from the page
     static navigationOptions = {
