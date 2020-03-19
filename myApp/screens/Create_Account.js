@@ -17,16 +17,19 @@ class LoginScreen extends Component{
         result: ""
         }
     }
+
+    // Function uses the text entered in the TextInput to create a new account for the user
     createAccount()
     {
-     let result = JSON.stringify({
+      // Converts the account object into a JSON String before Posting it
+     let account = JSON.stringify({
        given_name: this.state.Given_Name,
        family_name: this.state.Family_Name,
        email: this.state.Email,
        password: this.state.Password
      });
  
-     console.log(result);
+     console.log(account);
  
      return fetch("http://10.0.2.2:3333/api/v0.0.5/user",
      {
@@ -34,7 +37,7 @@ class LoginScreen extends Component{
          "Content-Type": "application/json"
        },
        method: 'POST',
-       body: result
+       body: account
      })
      .then((response) => response.json())
      .then((responseJson) => {

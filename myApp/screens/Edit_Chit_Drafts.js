@@ -18,41 +18,45 @@ class HomeScreen extends Component{
         }
     }
 
-    _retrieveTokenData = async () => {
-      console.log("--------------------Retreive Chits Drafts--------------------------------");
-      try {
-        const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
-        const key = key2+'SaveChitsDrafts';  // Generates a unique Chit Draft Key for all the users 
-        console.log("Key for Chit Drafts:"+key )
-  
-        const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
-        console.log("Check Existing Saved Chits: "+ retreived_chit_drafts)
-        if (retreived_chit_drafts !== null) {
-          this.setState({saved_Chits_Drafts:retreived_chit_drafts});
-          this.setState({Chit_Draft_Key:key});
-          console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
-          console.log("Chits Value is: "+JSON.stringify( this.state.saved_Chits_Drafts));
-          this.setState({current_chit_Draft:this.props.navigation.state.params.selected_chit});
-          //JSON.stringify(this.state.chit_content.chit_content)
-        }
-      } catch (error) {
-        // Error retrieving data
-      }
-      console.log("------- Chit Details -------");
-      console.log("Chit Content 2:" +JSON.stringify(this.state.current_chit_Draft.chit_content));
-      this.setState({input:JSON.stringify(this.state.current_chit_Draft.chit_content)});
-    };
+    // Async Function retrieves the user_id, token and the array used to store the chit Drafts for the current user from Async Storage
+  _retrieveTokenData = async () => {
+    console.log("--------------------Retreive Chits Drafts--------------------------------");
+    try {
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;  // gets the user_id of the current user
+      const key = key2+'SaveChitsDrafts';  // variable is the key to retreive the array containing the Chit Drafts from the Async Storage
+      console.log("Key for Chit Drafts:"+key )
 
-    updateChit_Content(){
-      console.log("Chit Content: "+ this.state.input);
-      this.setState({current_chit_Draft: this.state.input})
-      console.log("Chit Content: "+ JSON.stringify(this.state.current_chit_Draft));
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ; // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+      console.log("Check Existing Saved Chits: "+ retreived_chit_drafts)
+
+      // Checks to see that the 'retreived_chit_drafts' array isnt null and contains chit drafts
+      if (retreived_chit_drafts !== null) {
+        // Stores the array containing all the chits Drafts, the key to get the array containing the Chits Drafts in variables from the contructor.
+        this.setState({saved_Chits_Drafts:retreived_chit_drafts});
+        this.setState({Chit_Draft_Key:key});
+        this.setState({current_chit_Draft:this.props.navigation.state.params.selected_chit});         // The current Chit that is being edited is stored in the 'current_chit_Draft' variable.
+        console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
+        console.log("Chits Value is: "+JSON.stringify( this.state.saved_Chits_Drafts));
+        //JSON.stringify(this.state.chit_content.chit_content)
+      }
+    } catch (error) {
+      // Error retrieving data
     }
+    console.log("------- Chit Details -------");
+    console.log("Chit Content 2:" +JSON.stringify(this.state.current_chit_Draft.chit_content));
+    this.setState({input:JSON.stringify(this.state.current_chit_Draft.chit_content)});
+  };
+
+  // Function is used to update the current chit draft and save it back onto the chit draft array in the Async Storage
+  updateChit_Content(){
+    console.log("Chit Content: "+ this.state.input);
+    this.setState({current_chit_Draft: this.state.input})
+    console.log("Chit Content: "+ JSON.stringify(this.state.current_chit_Draft));
+  }
+  
   componentDidMount(){
     console.log("------- Edit Chits Drafts Page -------");
     this._retrieveTokenData();
-    //console.log("Selected Chit:" +JSON.stringify(this.props.navigation.state.params.selected_chit));
-  //  console.log("Selected Chit 2:" +this.state.current_chit_Draft);
     console.log("Selected Chit Index:" +this.props.navigation.state.params.selected_chit_index);
    }
 

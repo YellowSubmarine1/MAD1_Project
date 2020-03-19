@@ -23,7 +23,7 @@ class HomeScreen extends Component{
         }
     }
 
-      // function uses 'fetch' to call the api and return a JSON string from the server
+// function used to get all the Chits that have been published from the Server
   getData()
   {
     console.log("Current Display_Content Value 1 is: "+this.state.Display_content);
@@ -51,16 +51,16 @@ class HomeScreen extends Component{
    console.log(error);
    });
    }
-  
-   LoadScreen(user_id)
+
+// Whenever a User Profile Image is selected, their Profile page is loaded with the user_id of the selected user being sent to the 'selectedUserProfile' page.
+LoadScreen(user_id)
 {
    console.log(user_id)
-   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
 }
-   // Logout
-   logout_User()
-   {
-
+// Logout Function is used to logout the current user
+logout_User()
+{
     return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
     {
       headers: {
@@ -74,61 +74,40 @@ class HomeScreen extends Component{
      console.log("Res:" + JSON.stringify(response));
      console.log("Res status:" + JSON.stringify(response.status));
      console.log("Res ok?:" + JSON.stringify(response.ok));
-     //this.setState({
-     //  server_response: response.status,
-    // });
+
+     // if the server response if 200, then the user will be redirected to the Login Page
     if(JSON.stringify(response.status) == 200)
     {
       this.props.navigation.navigate('Login');
     }
     else if(JSON.stringify(response.status) == 401)
     {
-      console.log("Please Login")
+      console.log("Failed to Logout")
     }
-     //return response.json()
    })
- /*    .then((responseJson) => {
-         console.log("----------------------Results----------------------");
-         console.log("Response: "+responseJson)
-         console.log("Response Status: "+this.state.server_response)
-         if(this.state.server_response == 200)
-         {
-           this.props.navigation.navigate('Login');
-         }
-         elseif(this.state.server_response == 401)
-         {
-           console.log("Please Login")
-         }
-    })*/
-    .catch((error) =>{
-     console.log(error);
-     })
-   }
-   _retrieveTokenData = async () => {
-    console.log("--------------------Retreive Token--------------------------------");
-    try {
-      const value = await AsyncStorage.getItem('Token');
-      const value2 = await AsyncStorage.getItem('display_content');
-      if (value !== null) {
-        console.log("Post_Chits Retreived Token: "+value);
-        console.log("Post_Chits Retreived display_content: "+value2);
-        this.setState({XAuthorization:value});
-        this.setState({Display_content:value2});
-        console.log("Recieved Token Value is: "+this.state.XAuthorization);
-        console.log("Recieved Display Value 2 is: "+this.state.Display_content);
-        this.getData();
-      }
-    } catch (error) {
-      // Error retrieving data
+  .catch((error) =>{
+      console.log(error);
+    })
+}
+// Async Function is used to retrieve the Authorization Token for the current user and the value to Whether or not to display the Action-Bar
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('Token');  // retrieve the Token
+    const value2 = await AsyncStorage.getItem('display_content'); // retrieves the value to Whether or not to display the Action-Bar
+    if (value !== null && value2 !== null) { 
+      this.setState({XAuthorization:value,Display_content:value2});
+      console.log("Recieved Token Value is: "+this.state.XAuthorization);
+      console.log("Recieved Display Value 2 is: "+this.state.Display_content);
+      this.getData();
     }
-  };
+  } catch (error) {
+    // Error retrieving data
+  }
+};
  componentDidMount(){
    console.log("--------------- Chits ----------------")
-   //console.log("Recieve Display_Content: "+  this.props.navigation.state.params.Display_Content)
-   //this.setState({Display_Content: this.props.navigation.state.params.Display_Content});
    this._retrieveTokenData();
-  // console.log("Current Display_Content Value is 3: "+this.state.Display_content);
-  // this.getData();
   } 
  render(){
    if(this.state.isLoading){
@@ -140,7 +119,6 @@ class HomeScreen extends Component{
     }
  return(
   <View style={{ flex:1, flexDirection:'column', marginBottom:3} }>
-      <Text style={{fontSize:10, alignSelf:'auto', alignItems:'stretch'}}> {this.state.Display_content}</Text>
   <View style={{backgroundColor:'#E91E63', alignItems:'center', justifyContent:'center', borderBottomWidth:10, borderBottomColor:'#ddd'}}>
       <Text style={{color:'white', fontSize:18, height:50, paddingTop:10}}>- Chits -</Text>
   </View>
