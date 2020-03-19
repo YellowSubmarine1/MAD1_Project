@@ -124,7 +124,7 @@ export default class FollowersScreen extends Component{
               <TouchableOpacity onPress={()=> this.LoadScreen(item.user_id)}>
                 <Image
                     style={{width:50, height: 50, marginTop:10, marginLeft:5, borderRadius:15}} 
-                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo"}}
+                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user_id +"/photo" +'?' + new Date()}}
                   />
               </TouchableOpacity>
               <View style={{justifyContent:'center'}}>

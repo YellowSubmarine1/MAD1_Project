@@ -13,8 +13,17 @@ class HomeScreen extends Component{
         XAuthorization: '',
         saved_Chits_Drafts: [],
         current_chit_Draft:[],
-        input:'',
-        Chit_Draft_Key:''
+        chit_index_to_remove:'',
+        Chit_Draft_Key:'',
+        user_id:'',
+        Given_Name:'',
+        Family_Name:'',
+        Email:'',
+        chit_content:'',
+        timestamp:'',
+        longitude:'',
+        latitude:'',
+        chit_id:''
         }
     }
 
@@ -42,22 +51,88 @@ class HomeScreen extends Component{
     } catch (error) {
       // Error retrieving data
     }
+
     console.log("------- Chit Details -------");
+    console.log("Chit_ID:" +JSON.stringify(this.state.current_chit_Draft.chit_id));
+    console.log("Chit TimeStamp:" +JSON.stringify(this.state.current_chit_Draft.timestamp));
     console.log("Chit Content 2:" +JSON.stringify(this.state.current_chit_Draft.chit_content));
-    this.setState({input:JSON.stringify(this.state.current_chit_Draft.chit_content)});
+    console.log("Chit latitude:" +JSON.stringify(this.state.current_chit_Draft.location.latitude));
+    console.log("Chit longitude:" +JSON.stringify(this.state.current_chit_Draft.location.longitude));
+    console.log("Chit User_ID:" +JSON.stringify(this.state.current_chit_Draft.user.user_id));
+    console.log("Chit Given Name:" +JSON.stringify(this.state.current_chit_Draft.user.given_name));
+    console.log("Chit Family Name:" +JSON.stringify(this.state.current_chit_Draft.user.family_name));
+    console.log("Chit Email:" +JSON.stringify(this.state.current_chit_Draft.user.email));
+
+
+    this.setState({
+      chit_id:JSON.stringify(this.state.current_chit_Draft.chit_id),
+      timestamp:JSON.stringify(this.state.current_chit_Draft.timestamp),
+      chit_content:this.state.current_chit_Draft.chit_content,
+      latitude:JSON.stringify(this.state.current_chit_Draft.location.latitude),
+      longitude:JSON.stringify(this.state.current_chit_Draft.location.longitude),
+      user_id:JSON.stringify(this.state.current_chit_Draft.user.user_id),
+      given_name:this.state.current_chit_Draft.user.given_name,
+      family_name:this.state.current_chit_Draft.user.family_name,
+      email:this.state.current_chit_Draft.user.email,
+    });
+    
   };
 
+  
   // Function is used to update the current chit draft and save it back onto the chit draft array in the Async Storage
-  updateChit_Content(){
-    console.log("Chit Content: "+ this.state.input);
-    this.setState({current_chit_Draft: this.state.input})
-    console.log("Chit Content: "+ JSON.stringify(this.state.current_chit_Draft));
+  updateChit_Content =async()=>{
+
+    let updated_Chit ={
+      chit_id:0,
+      timestamp:parseInt(this.state.timestamp),
+      chit_content: this.state.chit_content,
+      location:{longitude: parseFloat(this.state.longitude), latitude:parseFloat(this.state.latitude)},
+      user:{
+        user_id: parseInt(this.state.user_id),
+        given_name: this.state.given_name,
+        family_name: this.state.family_name,
+        email: this.state.email
+      }
+    };
+    console.log("----------- Update Chit Content");
+    console.log("Changed Chit Content: "+ this.state.chit_content);
+    console.log("Update Chit Post: "+updated_Chit)
+
+    console.log("Current Chit Content: "+ JSON.stringify(this.state.current_chit_Draft));
+    // Removes current chit from the locally stored Array
+    console.log("Before Current Chit Removed: "+ JSON.stringify(this.state.saved_Chits_Drafts));
+    this.state.saved_Chits_Drafts.splice(this.state.chit_index_to_remove,1);
+    console.log("After Current Chit Removed: "+ JSON.stringify(this.state.saved_Chits_Drafts));
+
+    console.log("----------- Update Chit Added to Array");
+    this.state.saved_Chits_Drafts.push(updated_Chit)  // adds the updated chit into the chit Draft array
+    console.log("Updated Chit Drafts:"+this.state.saved_Chits_Drafts )
+    // converts the array into a JSON String Object and updates the Array on the Async Storage using the key for that array
+    console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
+    try {
+      if (this.state.saved_Chits_Drafts != null){
+        console.log("Key Exists, Array Found");
+        console.log("Check Existing Saved Chits: "+ this.state.saved_Chits_Drafts);
+       await AsyncStorage.removeItem(this.state.Chit_Draft_Key);
+       await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(this.state.saved_Chits_Drafts)) 
+      }
+      //await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(this.state.saved_Chits_Drafts)) 
+     // .then( ()=>{
+        alert("Chit Draft Edited !");
+        console.log('It was saved successfully')
+        this.props.navigation.navigate('Saved_Chits_Drafts');
+     // })
+    } catch (error) {
+      // Error retrieving data
+    }
+    
   }
   
   componentDidMount(){
     console.log("------- Edit Chits Drafts Page -------");
     this._retrieveTokenData();
     console.log("Selected Chit Index:" +this.props.navigation.state.params.selected_chit_index);
+    this.setState({chit_index_to_remove:this.props.navigation.state.params.selected_chit_index})
    }
 
   
@@ -74,8 +149,8 @@ class HomeScreen extends Component{
       <Text style={{color:'gray', fontSize:11}}>Time_Stamp:  {this.state.current_chit_Draft.timestamp}</Text>
           <Text style={{color:'gray', fontSize:11}}>Chit Content</Text>
                   <TextInput style={{ height: 140, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
-                onChangeText={(value) => this.setState({input:value})}
-                value={this.state.current_chit_Draft.chit_content}
+                onChangeText={(value) => this.setState({chit_content:value})}
+                value={this.state.chit_content}
             multiline={true}
             underlineColorAndroid='transparent'
             maxLength={141}

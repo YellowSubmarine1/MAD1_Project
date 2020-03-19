@@ -143,7 +143,7 @@ getData(){
     {/* Styling for the Image*/}
     <View style={{flex:1, marginTop:10, marginLeft:5}}>
       <Image
-        source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
+        source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo" +'?' + new Date()}}
         style= {{width:75, height:70, borderRadius:15, marginLeft:5}}
       />
     </View>
@@ -178,7 +178,7 @@ getData(){
           <View style={{flex:1, margin:2, marginLeft:5}}>
             <Image
                   style={{width:40, height: 40, borderRadius:15}}
-                  source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
+                  source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo" +'?' + new Date()}}
                 />
           </View>
 

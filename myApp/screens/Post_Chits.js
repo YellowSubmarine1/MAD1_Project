@@ -339,7 +339,7 @@ componentDidMount(){
         this.state.Display_content ? 
         <Image
               style={{width:200, height: 100, borderRadius:15, marginBottom:10}}
-              source={{uri: this.state.Image_URL}}
+              source={{uri: this.state.Image_URL +'?' + new Date()}}
           />: null
       }
 

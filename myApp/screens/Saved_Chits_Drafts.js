@@ -59,7 +59,6 @@ export default class FollowersScreen extends Component{
     console.log("Remove Draft:"+JSON.stringify(selected_chit));
       const index = this.state.saved_Chits_Drafts.indexOf(selected_chit);
       console.log("Index of Draft:"+index);
-      const newArray = [this.state.saved_Chits_Drafts];
       this.state.saved_Chits_Drafts.splice(index,1);
 
       console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
@@ -80,7 +79,7 @@ export default class FollowersScreen extends Component{
     postChit(selected_chit)
     {
 
-      console.log("--------------Edit Chit-------------------")
+      console.log("--------------Post Chit-------------------")
       console.log("selected Draft:"+JSON.stringify(selected_chit));
       const index = this.state.saved_Chits_Drafts.indexOf(selected_chit);
       console.log("Index of Draft:"+index);
@@ -98,6 +97,7 @@ export default class FollowersScreen extends Component{
       })
       .then((response) => {
         let server_response = JSON.stringify(response.status);
+        console.log("Response Status: "+server_response)
         if(server_response == 201)
         {
           console.log("-------- Update Made -------------");
@@ -106,9 +106,9 @@ export default class FollowersScreen extends Component{
           console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
           this.storeUpdated_Chits(this.state.saved_Chits_Drafts)
           console.log("-------- Chit Posted -------------");
-          console.log("Response Status: "+server_response)
           alert("Chit Posted!");
-          this.props.navigation.navigate('Chits');
+          this._retrieveTokenData()
+          //this.props.navigation.navigate('Chits'); 
         }
         if(server_response == 401){
           alert("Unauthorized, Please Login");
@@ -116,8 +116,7 @@ export default class FollowersScreen extends Component{
     /*  .then((response) => {
         response.json()
       })
-      */
-    /*    .then((responseJson) => {
+    .then((responseJson) => {
           this.state.saved_Chits_Drafts.splice(index,1);
     
           console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
@@ -126,7 +125,8 @@ export default class FollowersScreen extends Component{
             console.log("-------- Chit Posted -------------");
             console.log("Response Status: "+this.state.server_response)
             alert("Chit Posted!");
-            this.props.navigation.navigate('Chits');
+            this._retrieveTokenData()
+            //this.props.navigation.navigate('Chits');
       })
       */
       .catch((error) =>{

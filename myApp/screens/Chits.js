@@ -135,7 +135,7 @@ logout_User()
             <TouchableOpacity onPress={()=> this.LoadScreen(item.user.user_id)}>
               <Image
                     style={{width:50, height: 50, borderRadius:15}}
-                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user.user_id +"/photo"}}
+                    source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+item.user.user_id +"/photo" +'?' + new Date()}}
               />
             </TouchableOpacity>
           </View>

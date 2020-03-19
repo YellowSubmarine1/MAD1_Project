@@ -217,7 +217,7 @@ componentDidMount()
       {/* Styling for the Image*/}
       <View style={{flex:1, marginTop:10, marginLeft:5}}>
         <Image
-          source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo"}}
+          source={{uri: "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/photo" +'?' + new Date()}}
           style= {{width:75, height:70, borderRadius:15, marginLeft:5}}
         />
       </View>
@@ -260,7 +260,7 @@ componentDidMount()
               <Image
                     style={{width:50, height: 50, borderRadius:15}}
                     //key={this.state.Image_URL.uri}
-                    source={this.state.Image_URL ? {uri: this.state.Image_URL } : null}
+                    source={this.state.Image_URL ? {uri: this.state.Image_URL +'?' + new Date() } : null}
                   />
             </View>
   
