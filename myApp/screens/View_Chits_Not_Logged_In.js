@@ -23,95 +23,88 @@ class HomeScreen extends Component{
         }
     }
 
-      // function uses 'fetch' to call the api and return a JSON string from the server
-  getData()
+// Function uses 'fetch' to call the api and return a JSON string from the server
+getData(){
+  console.log("Current Display_Content Value 1 is: "+this.state.Display_content);
+  let search = "http://10.0.2.2:3333/api/v0.0.5/chits";
+  console.log("All Chits:");
+  console.log(search);
+  return fetch(search,
   {
-    console.log("Current Display_Content Value 1 is: "+this.state.Display_content);
-    let search = "http://10.0.2.2:3333/api/v0.0.5/chits";
-    console.log("All Chits:");
-    console.log(search);
-   return fetch(search,
-   {
-     headers: {
-       "Content-Type": "application/json"
-     },
-     method: 'GET'
-   })
-   .then((response) => response.json())
-   .then((responseJson) => {
-       this.setState({
-       isLoading: false,
-       Chits_List: responseJson,
-       Recent_Chits: responseJson.recent_chits,
-     });
-     console.log("JSON Results:");
-     console.log(this.state.Chits_List);
-   })
-   .catch((error) =>{
-   console.log(error);
-   });
-   }
-  
-   LoadScreen(user_id)
+    headers: {
+      "Content-Type": "application/json"
+    },
+    method: 'GET'
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+      this.setState({
+      isLoading: false,
+      Chits_List: responseJson,
+      Recent_Chits: responseJson.recent_chits,
+    });
+    console.log("JSON Results:");
+    console.log(this.state.Chits_List);
+  })
+  .catch((error) =>{
+  console.log(error);
+  });
+}
+
+// Function takes the user id to display the profile page of that user.
+LoadScreen(user_id)
 {
    console.log(user_id)
-   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
 }
-   // Logout
-   logout_User()
-   {
 
-    return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
-    {
-      headers: {
-        "Content-Type": "application/json",
-        "X-Authorization": this.state.XAuthorization
-      },
-      method: 'POST',
-      //body: result
-    })
-    .then((response) => {
-     console.log("Res:" + JSON.stringify(response));
-     console.log("Res status:" + JSON.stringify(response.status));
-     console.log("Res ok?:" + JSON.stringify(response.ok));
-     //this.setState({
-     //  server_response: response.status,
-    // });
-    if(JSON.stringify(response.status) == 200)
-    {
-      this.props.navigation.navigate('Login');
+// Logout Function is used to logout the current user
+logout_User()
+{
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/logout",
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "X-Authorization": this.state.XAuthorization
+    },
+    method: 'POST',
+    //body: result
+  })
+  .then((response) => {
+    console.log("Res:" + JSON.stringify(response));
+    console.log("Res status:" + JSON.stringify(response.status));
+    console.log("Res ok?:" + JSON.stringify(response.ok));
+  if(JSON.stringify(response.status) == 200)
+  {
+    this.props.navigation.navigate('Login');
+  }
+  else if(JSON.stringify(response.status) == 401)
+  {
+    console.log("Please Login")
+  }
+  })
+  .catch((error) =>{
+    console.log(error);
+  })
+}
+
+// Function is used to return the Token and store it.
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('Token');
+    if (value !== null) {
+      console.log("Post_Chits Retreived Token: "+value);
+      this.setState({XAuthorization:value});
+      this.getData();
     }
-    else if(JSON.stringify(response.status) == 401)
-    {
-      console.log("Please Login")
-    }
-   })
-    .catch((error) =>{
-     console.log(error);
-     })
-   }
-   _retrieveTokenData = async () => {
-    console.log("--------------------Retreive Token--------------------------------");
-    try {
-      const value = await AsyncStorage.getItem('Token');
-     // const value2 = await AsyncStorage.getItem('display_content');
-      if (value !== null) {
-        console.log("Post_Chits Retreived Token: "+value);
-       // console.log("Post_Chits Retreived display_content: "+value2);
-        this.setState({XAuthorization:value});
-       // this.setState({Display_content:value2});
-        //console.log("Recieved Token Value is: "+this.state.XAuthorization);
-        //console.log("Recieved Display Value 2 is: "+this.state.Display_content);
-        this.getData();
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+  } catch (error) {
+    // Error retrieving data
+  }
+};
  componentDidMount(){
    console.log("--------------- Chits ----------------")
    this._retrieveTokenData();
-  // this.getData();
   } 
  render(){
    if(this.state.isLoading){

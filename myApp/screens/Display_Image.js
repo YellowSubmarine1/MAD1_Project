@@ -38,7 +38,6 @@ static navigationOptions = {
         method: 'GET',
       })
       .then((response) => {
-       // response.json()
         console.log(response)
         console.log(response.url)
         this.setState({
@@ -53,9 +52,10 @@ static navigationOptions = {
       // Error retrieving data
     }
   };
+// Function is used to get the chit images posted using the user_ID of the user currently logged in.
 Get_Image()
 {
-  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/7/photo",
+  return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id+"/photo",
   {
     headers: {
       "Content-Type": "image/png",
@@ -64,7 +64,6 @@ Get_Image()
     method: 'GET',
   })
   .then((response) => {
-   // response.json()
     console.log(response)
     console.log(response.url)
     this.setState({
@@ -79,8 +78,7 @@ Get_Image()
 }
 
 componentDidMount(){
-  this._retrieveTokenData()
-  //this.Get_Image();
+  this._retrieveTokenData();
  }
  render(){
   if(this.state.isLoading){
@@ -109,5 +107,3 @@ componentDidMount(){
  }
 }
 export default Display_Chit_Images;
-/*
-I like to eat banana's because they are good for you, sometimes I eat apples to but I prefer the softness of bananas */

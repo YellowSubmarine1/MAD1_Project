@@ -29,8 +29,11 @@ class HomeScreen extends Component{
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
-    const value = await AsyncStorage.getItem('Token');  // retrieve the Token
-    const value2 = await AsyncStorage.getItem('display_content'); // retrieves the value to Whether or not to display the Action-Bar
+
+    // Retrieves the Token and Display_Content variable from async storage and then stores them in state variables.
+    const value = await AsyncStorage.getItem('Token');
+    // Retrieves the value to Whether or not to display the Action-Bar
+    const value2 = await AsyncStorage.getItem('display_content');
     if (value !== null && value2 !== null) { 
       this.setState({XAuthorization:value,isVisible:value2});
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
@@ -42,7 +45,7 @@ _retrieveTokenData = async () => {
   }
 };
 
-// function used to get all the Chits that have been published from the Server
+// Function used to get all the Chits that have been published from the Server
   getData()
   {
     console.log("Current Display_Content Value 1 is: "+this.state.isVisible);
@@ -71,12 +74,12 @@ _retrieveTokenData = async () => {
    console.log(error); 
   this.setState({isLoading:false,refreshing:false})
    });
-   }
+  }
 
 // Whenever a User Profile Image is selected, their Profile page is loaded with the user_id of the selected user being sent to the 'selectedUserProfile' page.
 LoadScreen(user_id)
 {
-   console.log(user_id)
+   console.log(user_id);
    this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
 }
 // Logout Function is used to logout the current user
@@ -89,26 +92,25 @@ logout_User()
         "X-Authorization": this.state.XAuthorization
       },
       method: 'POST',
-      //body: result
     })
     .then((response) => {
      console.log("Res:" + JSON.stringify(response));
      console.log("Res status:" + JSON.stringify(response.status));
      console.log("Res ok?:" + JSON.stringify(response.ok));
 
-     // if the server response if 200, then the user will be redirected to the Login Page
+     // If the server response if 200, then the user will be redirected to the Login Page
     if(JSON.stringify(response.status) == 200)
     {
       this.props.navigation.navigate('Login');
     }
-    else if(JSON.stringify(response.status) == 401)
+    else if(JSON.stringify(response.status) === 401)
     {
-      console.log("Failed to Logout")
+      console.log("Failed to Logout");
     }
    })
   .catch((error) =>{
       console.log(error);
-    })
+    });
 }
 
 // Function is used to refresh the page whenever the user pulls down the gethData function is run again returning the most recent chits.
@@ -119,7 +121,7 @@ handleRefresh=()=>{
     seed:this.state.seed+1
   }, ()=>{
     this.getData();
-  })
+  });
 }
  componentDidMount(){
    console.log("--------------- Chits ----------------")

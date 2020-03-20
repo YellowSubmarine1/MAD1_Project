@@ -21,10 +21,11 @@ static navigationOptions = {
     }
 }
 
+// Function is used to search for uses on the platform, using the input query from the TextInput.
 searchUser()
 {
   let user_search= "http://10.0.2.2:3333/api/v0.0.5/search_user/?q=" +this.state.search;
- console.log("Search Query: "+user_search);
+  console.log("Search Query: "+user_search);
  return fetch(user_search,
  {
    headers: {
@@ -32,7 +33,6 @@ searchUser()
    },
    method: 'GET',
  })
- //.then((response) => response.json())
  .then((response) => {
   this.setState({
     server_response: response.status
@@ -43,6 +43,7 @@ searchUser()
   console.log("Res ok?:" + JSON.stringify(response.ok));
   return response.json()})
  .then((responseJson) => {
+   // Stores the returned results onto an array.
      this.setState({
      isLoading: false,
      Search_List: responseJson,
@@ -52,7 +53,8 @@ searchUser()
    console.log("Response Results: "+responseJson)
 
    console.log("Name: "+ this.state.given_name +" " +this.state.family_name);
-   if(this.state.server_response == 200)
+   // Depending on the response code, the alert message is displayed.
+   if(this.state.server_response === 200)
    {
     alert("User Found: "+ this.state.given_name +" "+ this.state.family_name);
   }   else if (this.state.server_response === 404){
@@ -89,6 +91,7 @@ getData(){
  });
  }
 
+ // Function is used to take the user id of the selected user and attempts to follow the user.
 followUser(current_user_id)
 {   console.log("----------------------Follow User----------------------");
  console.log(current_user_id);
@@ -110,15 +113,14 @@ followUser(current_user_id)
   console.log("Res:" + JSON.stringify(response));
   console.log("Res status:" + JSON.stringify(response.status));
   console.log("Res ok?:" + JSON.stringify(response.ok));
-  //return response.json()
 })
   .then((responseJson) => {
 
       console.log("----------------------Results----------------------");
       console.log("Response Status: "+this.state.server_response)
       console.log("Response Status: "+responseJson)
-      //alert("Now Following User ");
-      if(this.state.server_response == 200)
+      // Depending on the server response, an alert message is displayed.
+      if(this.state.server_response === 200)
       {
         alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
         this.props.navigation.navigate('Following');
@@ -133,11 +135,14 @@ followUser(current_user_id)
   })
 }
 
+  // Function takes the user_id of the user selected in the FlatList and loads their profile page
 LoadScreen(user_id)
 {
    console.log(user_id)
-   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
 }
+
+// Async Function is used to retrieve the Token from Async storage and store the oken 
 _retrieveData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {

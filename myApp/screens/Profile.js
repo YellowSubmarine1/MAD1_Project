@@ -43,7 +43,7 @@ getData(){
     })
     .then((response) => response.json())
     .then((responseJson) => {
-            // The returned user details of the current user_id and saves them on state variables.
+        // The returned user details of the current user_id and saves them on state variables.
         this.setState({
         isLoading: false,
         User_Profile: responseJson,
@@ -59,7 +59,8 @@ getData(){
       // Calls the getFollowers & getFollowing function which returns all the followers and following list for this user_id
       this.getFollowers();
       this.getFollowing();
-      this.Get_Image(); // Displays the profile of the current user
+      // Displays the profile of the current user.
+      this.Get_Image();
       console.log("User's Name:");
       console.log(this.state.given_name);
 
@@ -84,10 +85,11 @@ getData(){
     });
 }
 
-/// Loads page to edit user profile
+/// Loads page to edit user profile.
 edituserProfile()
 {
-   this.props.navigation.navigate('Edit_User_Profile',{user_id:this.state.user_id, XAuthorization:this.state.XAuthorization}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+  // Loads the edit profile page for the user currently logged in and passes the user_id and Token.
+   this.props.navigation.navigate('Edit_User_Profile',{user_id:this.state.user_id, XAuthorization:this.state.XAuthorization});
 }
 
 // This Function is used to retreive the Profile of the user currently logged in
@@ -101,13 +103,13 @@ Get_Image()
     method: 'GET',
   })
   .then((response) => {
-   // response.json()
     console.log(response)
     console.log(response.url)
     this.setState({
       isLoading: false,
       server_response: response.status,
-      Image_URL:response.url     // Image URI is returned and stored in a state variable
+      // Image URI is returned and stored in a state variable.
+      Image_URL:response.url
     });
   })
   .catch((error) =>{
@@ -133,7 +135,8 @@ getFollowers(){
   .then((responseJson) => {
       this.setState({
       isLoading: false,
-      Followers: responseJson.length // the number of user's in the array are stored
+      // The number of user's in the array are stored.
+      Followers: responseJson.length
     });
     console.log("JSON Results:");
     console.log(responseJson);
@@ -149,10 +152,9 @@ getFollowers(){
 
 // This function uses the User_ID of the selected user and then returns all the users the selected user_id follows in an array,
 // it stores the number of people this user is following and displays them on the page.
-
-  getFollowing(){
-    let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
-          console.log('Request: ');
+getFollowing(){
+  let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
+  console.log('Request: ');
   console.log(input);
     return fetch(input,
     {
@@ -165,7 +167,8 @@ getFollowers(){
     .then((responseJson) => {
         this.setState({
         isLoading: false,
-        Following: responseJson.length  // the number of user's in the array are stored
+        // The number of people the user is following is returned in an array and the number of user's in the array are stored
+        Following: responseJson.length
       });
       console.log("JSON Results:");
       console.log(responseJson);
@@ -179,41 +182,40 @@ getFollowers(){
     });
     }
 
-      // Async Function retrieves the user_id, token of the user current logged in from the Async Storage
-  _retrieveTokenData = async () => {
-    console.log("--------------------Retreive Token--------------------------------");
-    try {
-      const value = await AsyncStorage.getItem('Token');
-      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
-      if (value !== null && key2 !== null) {
-        console.log("Post_Chits Retreived Token: "+value);
-        this.setState({XAuthorization:value,user_id:key2});
-        //this.setState({user_id:key2});
-  
-        console.log("Recieved Token Value is: "+this.state.XAuthorization);
-        console.log("Recieved User UD Value is: "+this.state.user_id);
-        this.getData()
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+// Async Function retrieves the user_id, token of the user current logged in from the Async Storage
+_retrieveTokenData = async () => {
+  console.log("--------------------Retreive Token--------------------------------");
+  try {
+    const value = await AsyncStorage.getItem('Token');
+    const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+    // Checks to see that the Token and User_ID are not null and then stores them.
+    if (value !== null && key2 !== null) {
+      console.log("Post_Chits Retreived Token: "+value);
+      this.setState({XAuthorization:value,user_id:key2});
 
-  handleRefresh=()=>{
-    this.setState({
-      page:1,
-      refreshing:true,
-      seed:this.state.seed+1
-    }, ()=>{
-      this.getData();
-    })
+      console.log("Recieved Token Value is: "+this.state.XAuthorization);
+      console.log("Recieved User UD Value is: "+this.state.user_id);
+      this.getData()
+    }
+  } catch (error) {
+    // Error retrieving data
   }
+};
+  // Function is used to refresh the content on the page whenever the user pulls down the screen, this loads the updates made on other pages.
+handleRefresh=()=>{
+  this.setState({
+    page:1,
+    refreshing:true,
+    seed:this.state.seed+1
+  }, ()=>{
+    this.getData();
+  })
+}
 componentDidMount()
 {
   console.log("-------------------------------------------------------------------------");
   this._retrieveTokenData();
   console.log('User_ID:'+ this.state.user_id);
-  //(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
 } 
 
  render(){

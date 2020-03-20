@@ -105,14 +105,15 @@ _retrieveTokenData = async () => {
   }
   this.getData();
 };
-// Used to refresh the page whenever the user pulls down
+  // Function is used to refresh the content on the page whenever the user pulls down the screen, this loads the updates made on other pages.
 handleRefresh=()=>{
   this.setState({
     page:1,
     refreshing:true,
     seed:this.state.seed+1
   }, ()=>{
-    this.getData(); // recalls the getData function to pull latest data
+    // Recalls the getData function to pull latest people that the user currently logged in follow.
+    this.getData();
   })
 }
  componentDidMount(){

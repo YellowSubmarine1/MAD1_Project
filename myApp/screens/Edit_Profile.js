@@ -24,13 +24,14 @@ class HomeScreen extends Component{
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token & User_ID--------------------------------");
   try {
-    // gets the Token and User_ID from async storage, asigns them to state variables to use later to update the user profile.
+    // Gets the Token and User_ID from async storage, asigns them to state variables to use later to update the user profile.
       const authorization_Token = await AsyncStorage.getItem('Token');
       const new_user_id =JSON.parse(await AsyncStorage.getItem('key2')) ;
       console.log("Retreived Token: "+authorization_Token);
       console.log("Retreived User_ID: "+new_user_id);
       this.setState({XAuthorization: authorization_Token, user_id:new_user_id});
 
+      // Uses the user_ID of the user currently logged in to retreive all their profile details.
       let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ new_user_id;
       return fetch(result, {
           method: 'GET',
@@ -39,20 +40,21 @@ _retrieveTokenData = async () => {
           }})
           .then((response) => {
             let server_response = JSON.stringify(response.status);
-
-            if(server_response == 404)
+            
+            // Checks the server response and returns an alert if the user doesn't exist in the server.
+            if(server_response === 404)
             {
               Alert.alert("User Not Found");
             }else
             {
-              console.log("Respose: "+ server_response)
-              console.log("res: "+ JSON.stringify(response))
+              console.log("Respose: "+ server_response);
+              console.log("res: "+ JSON.stringify(response));
               return response.json()
             }
           })
       .then((responseJson) => {
           console.log("Response Code: "+JSON.stringify(responseJson))
-          // stores the details returned from the server and displays them on the TextInput so that the user can update them.
+          // Stores the details returned from the server and displays them on the TextInput so that the user can update them.
           this.setState({
           isLoading: false,
           Given_Name: responseJson.given_name,
@@ -61,7 +63,7 @@ _retrieveTokenData = async () => {
           user_id: responseJson.user_id,
         });
         // Loads the profile picture of the current user.
-        this.Get_Image()
+        this.Get_Image();
       })
       .catch((error) =>{
       console.log(error);
@@ -76,10 +78,10 @@ _retrieveTokenData = async () => {
     console.log("Selected Profile Page Reached:");
     this._retrieveTokenData();
    }
-// Function is used to update the profile details of the user logged in, it takes the details entered from the TextInput,
-// converts to JSON string object and updates the user's details.
+// Function is used to update the profile details of the user logged in, it takes the details entered from the TextInput, converts to JSON string object and updates the user's details.
 updateProfile()
    {
+     // Creates an JSON Object with the updated profile details.
     let result = JSON.stringify({
       given_name: this.state.Given_Name,
       family_name: this.state.Family_Name,
@@ -101,6 +103,7 @@ updateProfile()
     })
     .then((response) => {
       let server_response = JSON.stringify(response.status);
+      // Checks the server response before publishing the changes made.
       if(server_response == 201)
       {
         console.log("-------- Update Made -------------");
@@ -143,8 +146,8 @@ Get_Image()
     })
 }
 
-// Function is run whenever the user presses on the Profile Picture of the user,
-// it opens the image picker giving the user the option of taking a picture or selecting an image from the library to change the profile picture of the user.
+// Function is run whenever the user presses on the Profile Picture of the user.
+// It opens the image picker giving the user the option of taking a picture or selecting an image from the library to change the profile picture of the user.
   handleChoosePhoto= () =>{
     console.log("Button Pressed")
     const options ={
@@ -168,7 +171,7 @@ Get_Image()
         this.setState({
           image_url: response.uri
         });
-        // sets the profile picture of the current user to the new image taken/ selected
+        // Sets the profile picture of the current user to the new image taken/ selected
         return fetch("http://10.0.2.2:3333/api/v0.0.5/user/photo",
         {
           headers: {
@@ -180,9 +183,10 @@ Get_Image()
         })
         .then((response) => {
           console.log("Res:" + JSON.stringify(response.status));
-          console.log("Response: "+response)
-          console.log("Returned URL: "+response.url)
-          this.Get_Image()  // loads and displays the new image.
+          console.log("Response: "+response);
+          console.log("Returned URL: "+response.url);
+          // loads and displays the new image.
+          this.Get_Image();
         })
         .then((response)=>{
           Alert.alert("Photo Added!");

@@ -22,10 +22,13 @@ export default class FollowersScreen extends Component{
    _retrieveTokenData = async () => {
     console.log("--------------------Retreive Chits Drafts--------------------------------");
     try {
-      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;  // gets the user_id of the current user
-      const key = key2+'SaveChitsDrafts';  // variable is the key to retreive the array containing the Chit Drafts from the Async Storage
+      // Gets the user_id of the current user
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
+      // Variable is the key to retreive the array containing the Chit Drafts from the Async Storage
+      const key = key2+'SaveChitsDrafts'; 
 
-      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ; // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+      // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
       const token = await AsyncStorage.getItem('Token');
       console.log("Check Existing Saved Chits: "+ retreived_chit_drafts)
       console.log("Recieved Saved Drafts: "+JSON.stringify( retreived_chit_drafts));
@@ -65,8 +68,9 @@ export default class FollowersScreen extends Component{
       this.state.saved_Chits_Drafts.splice(index,1);
 
       console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
-      this.storeUpdated_Chits(this.state.saved_Chits_Drafts)
-      this._retrieveTokenData() // used to refresh the page and display the updated list of Chit Drafts saved
+      this.storeUpdated_Chits(this.state.saved_Chits_Drafts);
+      // Used to refresh the page and display the updated list of Chit Drafts saved
+      this._retrieveTokenData();
     }
 
 // Function is used to Edit the selected chit Draft in the Array, get the index value of the chit, passes the chit and index value to the page where the chit content can be updated
@@ -100,7 +104,7 @@ export default class FollowersScreen extends Component{
       })
       .then((response) => {
         let server_response = JSON.stringify(response.status);
-        console.log("Response Status: "+server_response)
+        console.log("Response Status: "+server_response);
         if(server_response == 201)
         {
           this.setState({
@@ -117,25 +121,10 @@ export default class FollowersScreen extends Component{
           this._retrieveTokenData()
           //this.props.navigation.navigate('Chits'); 
         }
-        if(server_response == 401){
+        if(server_response === 401){
           alert("Unauthorized, Please Login");
         }})
-    /*  .then((response) => {
-        response.json()
-      })
-    .then((responseJson) => {
-          this.state.saved_Chits_Drafts.splice(index,1);
-    
-          console.log("Updated Draft:"+JSON.stringify(this.state.saved_Chits_Drafts));
-          this.storeUpdated_Chits(this.state.saved_Chits_Drafts)
 
-            console.log("-------- Chit Posted -------------");
-            console.log("Response Status: "+this.state.server_response)
-            alert("Chit Posted!");
-            this._retrieveTokenData()
-            //this.props.navigation.navigate('Chits');
-      })
-      */
       .catch((error) =>{
         console.log(error);
         this.setState({isLoading:false,refreshing:false})
@@ -143,7 +132,7 @@ export default class FollowersScreen extends Component{
         
     }
 
-    // Function is used to refresh the page whenever the user pulls down the gethData function is run again returning the most recent chits.
+// Function is used to refresh the page whenever the user pulls down the gethData function is run again returning the most recent chits.
 handleRefresh=()=>{
   this.setState({
     page:1,

@@ -23,7 +23,7 @@ static navigationOptions = {
 
 // Returns all the details of the selected user from the Flatlist in the Following, Chits, Followers and Search page.
 getData(){
-    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id; // retreives the user_id
+    let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.props.navigation.state.params.user_id;
     console.log('Get Request');
     console.log(result);
     return fetch(result,
@@ -84,7 +84,8 @@ getData(){
       .then((responseJson) => {
           this.setState({
           isLoading: false,
-          Followers: responseJson.length // the number of user's in the array are stored
+          // The followers of the current user are returned in an array and the number of user's in the array are stored
+          Followers: responseJson.length
         });
         console.log("JSON Results:");
         console.log(responseJson);
@@ -101,40 +102,41 @@ getData(){
 // This function uses the User_ID of the selected user and then returns all the users the selected user_id follows in an array,
 // it stores the number of people this user is following and displays them on the page.
 
-      getFollowing(){
-        let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
-              console.log('Request: ');
-      console.log(input);
-        return fetch(input,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: 'GET'
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            this.setState({
-            isLoading: false,
-            Following: responseJson.length  // the number of user's in the array are stored
-          });
-          console.log("JSON Results:");
-          console.log(responseJson);
+getFollowing(){
+  let input = "http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id + "/following";
+  console.log('Request: ');
+  console.log(input);
+  return fetch(input,
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: 'GET'
+  })
+  .then((response) => response.json())
+  .then((responseJson) => {
+      this.setState({
+      isLoading: false,
+      // The number of people the user is following is returned in an array and the number of user's in the array are stored
+      Following: responseJson.length
+    });
+    console.log("JSON Results:");
+    console.log(responseJson);
 
-          console.log("Following:");
-          console.log(this.state.Following);
-          console.log("__________________________________");
-        })
-        .catch((error) =>{
-        console.log(error);
-        });
-        }
+    console.log("Following:");
+    console.log(this.state.Following);
+    console.log("__________________________________");
+  })
+  .catch((error) =>{
+  console.log(error);
+  });
+  }
 
-    componentDidMount(){
-        console.log("Selected Profile Page Reached:");
-        console.log("UserID:" +this.props.navigation.state.params.user_id);
-        this.getData();
-       } 
+componentDidMount(){
+  console.log("Selected Profile Page Reached:");
+  console.log("UserID:" +this.props.navigation.state.params.user_id);
+  this.getData();
+  } 
 
  render(){
  return(

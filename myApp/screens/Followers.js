@@ -20,7 +20,7 @@ export default class FollowersScreen extends Component{
         }
     }
 
-  // function is used to return all the followers of the user currently logged in and Store them in an Array variable to display all the followers in the FlatList
+  // Function is used to return all the followers of the user currently logged in and Store them in an Array variable to display all the followers in the FlatList
   getData(){
    return fetch("http://10.0.2.2:3333/api/v0.0.5/user/"+this.state.user_id +"/followers",
    {
@@ -61,13 +61,13 @@ export default class FollowersScreen extends Component{
        method: 'GET',
      })
      .then((response) => {
-      // response.json()
        console.log(response)
        console.log(response.url)
+        // Saves the image URI of the returned Image.
        this.setState({
          isLoading: false,
          server_response: response.status,
-         Image_URL:response.url    // saves the image URI
+         Image_URL:response.url
        });
      })
      .catch((error) =>{
@@ -79,7 +79,7 @@ export default class FollowersScreen extends Component{
    LoadScreen(user_id)
    {
       console.log(user_id);
-      this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+      this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
    }
 
    // Async Function is used to retreive the user_id of the user currently logged in and stores it in a state variable
@@ -87,32 +87,33 @@ export default class FollowersScreen extends Component{
     try {
       const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
 
+      // Checks to see if the returned user_id isnt null before it is set to a state variable.
       if (key2 !== null) {
         this.setState({user_id:key2});
-  
         console.log("Recieved User UD Value is: "+this.state.user_id);
       }
     } catch (error) {
       // Error retrieving data
     }
+    // Returns the list of followers that follow the user currently logged in.
     this.getData();
-    //this.Get_Image();
   };
 
+  // Function is used to refresh the content on the page whenever the user pulls down the screen, this loads the updates made on other pages.
   handleRefresh=()=>{
     this.setState({
       page:1,
       refreshing:true,
       seed:this.state.seed+1
     }, ()=>{
+      // Calls the get request to return all the followers of the current user.
       this.getData();
-    })
+    });
   }
 
    componentDidMount(){
      console.log("------- Followers Page -------");
     this._retrieveTokenData();
-    //this.getData();
    }
  render(){
    if(this.state.isLoading){

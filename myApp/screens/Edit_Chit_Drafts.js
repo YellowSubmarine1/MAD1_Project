@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Text, View, Button,TextInput,AsyncStorage, Image,TouchableOpacity } from 'react-native';
-class HomeScreen extends Component{
+class Edit_Chit_Drafts extends Component{
     // removes the header from the page
     static navigationOptions = {
       header: false
@@ -30,12 +30,18 @@ class HomeScreen extends Component{
     // Async Function retrieves the user_id, token and the array used to store the chit Drafts for the current user from Async Storage
   _retrieveTokenData = async () => {
     console.log("--------------------Retreive Chits Drafts--------------------------------");
-    try {
-      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;  // gets the user_id of the current user
-      const key = key2+'SaveChitsDrafts';  // variable is the key to retreive the array containing the Chit Drafts from the Async Storage
-      console.log("Key for Chit Drafts:"+key )
+    console.log("Selected Chit Index:" +this.props.navigation.state.params.selected_chit_index);
+    this.setState({chit_index_to_remove:this.props.navigation.state.params.selected_chit_index});
 
-      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ; // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+    try {
+      // Gets the user_id of the current user
+      const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ; 
+      // Variable is the key to retreive the array containing the Chit Drafts from the Async Storage
+      const key = key2+'SaveChitsDrafts'; 
+      console.log("Key for Chit Drafts:"+key );
+
+      // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+      const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
       console.log("Check Existing Saved Chits: "+ retreived_chit_drafts)
 
       // Checks to see that the 'retreived_chit_drafts' array isnt null and contains chit drafts
@@ -43,10 +49,10 @@ class HomeScreen extends Component{
         // Stores the array containing all the chits Drafts, the key to get the array containing the Chits Drafts in variables from the contructor.
         this.setState({saved_Chits_Drafts:retreived_chit_drafts});
         this.setState({Chit_Draft_Key:key});
-        this.setState({current_chit_Draft:this.props.navigation.state.params.selected_chit});         // The current Chit that is being edited is stored in the 'current_chit_Draft' variable.
+        // The current Chit that is being edited is stored in the 'current_chit_Draft' variable.
+        this.setState({current_chit_Draft:this.props.navigation.state.params.selected_chit});
         console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
         console.log("Chits Value is: "+JSON.stringify( this.state.saved_Chits_Drafts));
-        //JSON.stringify(this.state.chit_content.chit_content)
       }
     } catch (error) {
       // Error retrieving data
@@ -63,7 +69,7 @@ class HomeScreen extends Component{
     console.log("Chit Family Name:" +JSON.stringify(this.state.current_chit_Draft.user.family_name));
     console.log("Chit Email:" +JSON.stringify(this.state.current_chit_Draft.user.email));
 
-
+    // This stores all the details from the Chit Drafts that is being edited into state variables so that they can later be pushed back to the Chit Draft array.
     this.setState({
       chit_id:JSON.stringify(this.state.current_chit_Draft.chit_id),
       timestamp:JSON.stringify(this.state.current_chit_Draft.timestamp),
@@ -82,6 +88,7 @@ class HomeScreen extends Component{
   // Function is used to update the current chit draft and save it back onto the chit draft array in the Async Storage
   updateChit_Content =async()=>{
 
+    // Creates a chits variable using the updated chit content and all the values of the original chit, this will be converted into a JSON object later on.
     let updated_Chit ={
       chit_id:0,
       timestamp:parseInt(this.state.timestamp),
@@ -96,32 +103,38 @@ class HomeScreen extends Component{
     };
     console.log("----------- Update Chit Content");
     console.log("Changed Chit Content: "+ this.state.chit_content);
-    console.log("Update Chit Post: "+updated_Chit)
+    console.log("Update Chit Post: "+updated_Chit);
 
     console.log("Current Chit Content: "+ JSON.stringify(this.state.current_chit_Draft));
-    // Removes current chit from the locally stored Array
     console.log("Before Current Chit Removed: "+ JSON.stringify(this.state.saved_Chits_Drafts));
+    
+    // Removes current chit from the locally stored Array
     this.state.saved_Chits_Drafts.splice(this.state.chit_index_to_remove,1);
     console.log("After Current Chit Removed: "+ JSON.stringify(this.state.saved_Chits_Drafts));
 
     console.log("----------- Update Chit Added to Array");
-    this.state.saved_Chits_Drafts.push(updated_Chit)  // adds the updated chit into the chit Draft array
-    console.log("Updated Chit Drafts:"+this.state.saved_Chits_Drafts )
-    // converts the array into a JSON String Object and updates the Array on the Async Storage using the key for that array
-    console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key )
+    // Adds the updated chit at the end of the chit Draft array.
+    this.state.saved_Chits_Drafts.push(updated_Chit);
+    console.log("Updated Chit Drafts:"+this.state.saved_Chits_Drafts );
+    console.log("Key for Chit Drafts:"+this.state.Chit_Draft_Key );
+
+    // Converts the array into a JSON String Object and updates the Array on the Async Storage using the key for updated Chit Drafts array.
     try {
+
+      // First checks to see if the Async Storage key for the Chit Drafts Array isn't Null, then it removes array with the matching Key from Async Storage.
+      // The updated Chits Draft Array is the added to Async Storage using the same key.
       if (this.state.saved_Chits_Drafts != null){
         console.log("Key Exists, Array Found");
         console.log("Check Existing Saved Chits: "+ this.state.saved_Chits_Drafts);
-       await AsyncStorage.removeItem(this.state.Chit_Draft_Key);
-       await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(this.state.saved_Chits_Drafts)) 
+
+        // Removes array with old chit Drafts and adds the updated chit drafts array.
+        await AsyncStorage.removeItem(this.state.Chit_Draft_Key);
+        await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(this.state.saved_Chits_Drafts)) ;
       }
-      //await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(this.state.saved_Chits_Drafts)) 
-     // .then( ()=>{
         alert("Chit Draft Edited !");
         console.log('It was saved successfully')
+        // Loads the page that display all the saved chit drafts.
         this.props.navigation.navigate('Saved_Chits_Drafts');
-     // })
     } catch (error) {
       // Error retrieving data
     }
@@ -131,8 +144,6 @@ class HomeScreen extends Component{
   componentDidMount(){
     console.log("------- Edit Chits Drafts Page -------");
     this._retrieveTokenData();
-    console.log("Selected Chit Index:" +this.props.navigation.state.params.selected_chit_index);
-    this.setState({chit_index_to_remove:this.props.navigation.state.params.selected_chit_index})
    }
 
   
@@ -163,4 +174,4 @@ class HomeScreen extends Component{
  );
  }
 }
-export default HomeScreen;
+export default Edit_Chit_Drafts;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, Button,TextInput,Alert } from 'react-native';
 class LoginScreen extends Component{
-    // removes the header from the page
+    // removes the header from the page.
     static navigationOptions = {
         header: null
     }
@@ -18,10 +18,10 @@ class LoginScreen extends Component{
         }
     }
 
-    // Function uses the text entered in the TextInput to create a new account for the user
+    // Function uses the text entered in the TextInput to create a new account for the user.
     createAccount()
     {
-      // Converts the account object into a JSON String before Posting it
+      // Converts the account object into a JSON String before Posting it.
      let account = JSON.stringify({
        given_name: this.state.Given_Name,
        family_name: this.state.Family_Name,

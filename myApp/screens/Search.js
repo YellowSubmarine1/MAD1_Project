@@ -22,6 +22,7 @@ static navigationOptions = {
     }
 }
 
+// Function is used to search for uses on the platform, using the input query from the TextInput.
 searchUser()
 {
   let user_search= "http://10.0.2.2:3333/api/v0.0.5/search_user/?q=" +this.state.search;
@@ -33,7 +34,7 @@ searchUser()
    },
    method: 'GET',
  })
- //.then((response) => response.json())
+
  .then((response) => {
   this.setState({
     server_response: response.status
@@ -44,19 +45,17 @@ searchUser()
   console.log("Res ok?:" + JSON.stringify(response.ok));
   return response.json()})
  .then((responseJson) => {
+    // Stores the returned results onto an array.
      this.setState({
      isLoading: false,
      Search_List: responseJson,
-     //family_name: responseJson.family_name,
-     //given_name:responseJson.given_name,
-    // email: responseJson.email,
-    // user_id: responseJson.user_id
    });
    console.log("----------------------Results----------------------");
    console.log("Response Status: "+this.state.server_response)
    console.log("Response Results: "+responseJson)
 
    console.log("Name: "+ this.state.given_name +" " +this.state.family_name);
+  // Depending on the response code, the alert message is displayed.
    if(this.state.server_response == 200)
    {
     alert("User Found: "+ this.state.given_name +" "+ this.state.family_name);
@@ -84,7 +83,8 @@ getData(){
  .then((responseJson) => {
      this.setState({
      isLoading: false,
-     Search_List: responseJson, // returned user's are stored in a state array variable
+     // Returned user's are stored in a state array variable
+     Search_List: responseJson,
    });
    console.log("JSON Results:");
    console.log(responseJson);
@@ -118,15 +118,14 @@ console.log("Token Value is: "+this.state.XAuthorization);
   console.log("Res:" + JSON.stringify(response));
   console.log("Res status:" + JSON.stringify(response.status));
   console.log("Res ok?:" + JSON.stringify(response.ok));
-  //return response.json()
 })
   .then((responseJson) => {
 
       console.log("----------------------Results----------------------");
-      console.log("Response Status: "+this.state.server_response)
-      console.log("Response Status: "+responseJson)
-      //alert("Now Following User ");
-      if(this.state.server_response == 200)
+      console.log("Response Status: "+this.state.server_response);
+      console.log("Response Status: "+responseJson);
+          // Depending on the server response, an alert message is displayed.
+      if(this.state.server_response === 200)
       {
         alert("Now Following: "+ this.state.given_name +" "+ this.state.family_name);
         this.props.navigation.navigate('Following');
@@ -141,11 +140,12 @@ console.log("Token Value is: "+this.state.XAuthorization);
   })
 }
 
-  // Function takes the user_id of the user selected in the FlatList and loads their profile page
+// Function takes the user_id of the user selected in the FlatList and loads their profile page
 LoadScreen(user_id)
 {
    console.log(user_id)
-   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id}); // Late add the user ID from the List of the pressed Icon and add it after '('UserProfile', userid)
+   //Loads the selectedUserProfile page and passes the user_id of the selected user i the flatlist.
+   this.props.navigation.navigate('selectedUserProfile',{user_id:user_id});
 }
 
 
@@ -153,6 +153,7 @@ LoadScreen(user_id)
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
+    // Returns the Token, user_id and variable to display the follow button from async storage.
     const value = await AsyncStorage.getItem('Token');
     const key2 =JSON.parse(await AsyncStorage.getItem('key2')) ;
     const value2 = await AsyncStorage.getItem('display_content');
@@ -160,6 +161,7 @@ _retrieveTokenData = async () => {
     console.log("Token Value is: "+value);
     console.log("User UD Value is: "+key2);
 
+    // Checks if the Token and User_ID are not null and then stores them in state variables from the constructor.
     if (value !== null && key2 !== null) {
       this.setState({XAuthorization:value});
       this.setState({user_id:key2});

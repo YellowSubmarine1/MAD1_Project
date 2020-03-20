@@ -184,14 +184,16 @@ getData(){
 _retrieveTokenData = async () => {
   console.log("--------------------Retreive Token--------------------------------");
   try {
-      // gets the Token and User_ID from async storage, asigns them to state variables to use later to post chits.
+    //Gets the Token and User_ID from async storage, asigns them to state variables to use later to post chits.
     const authorization_Token = await AsyncStorage.getItem('Token');
     const new_user_id =JSON.parse(await AsyncStorage.getItem('key2')) ;
-    const key = new_user_id+'SaveChitsDrafts';  // Generates a unique Chit Draft Key for all the users 
+    // Generates a unique Chit Draft Key for all the users 
+    const key = new_user_id+'SaveChitsDrafts';
     console.log("Key for Chit Drafts:"+key )
     
-    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;  // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
-       // Checks to see that the 'retreived_chit_drafts' array isnt null and contains chit drafts, that the token and user_id are not null before assigning them to a state variable 
+     // Uses the 'key' variable to retreive the array containing the Chit Drafts from the Async Storage
+    const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key)) ;
+    // Checks to see that the 'retreived_chit_drafts' array isnt null and contains chit drafts, that the token and user_id are not null before assigning them to a state variable 
     if (authorization_Token !== null && new_user_id !== null) {
       console.log("Post_Chits Retreived Token: "+authorization_Token);
       this.setState({
@@ -222,7 +224,7 @@ handleChoosePhoto= () =>{
     takePhotoButtonTitle:'Select from Camera',
     chooseFromLibraryButtonTitle:'Select from Library'
   };
-      // Displays the optons to the user.
+    // Displays the optons to the user to either take a picture using the camera or upload an image from the image library.
   ImagePicker.showImagePicker(options, (response) => {
     console.log('Response = ', response);
   
@@ -237,7 +239,7 @@ handleChoosePhoto= () =>{
   
       console.log("Image URL:"+ this.state.Image_URL)
       let search = "http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id+"/photo";
-      // Posts the chit photo
+      // Posts the chit photo.
       return fetch(search,
       {
         headers: {
@@ -249,14 +251,16 @@ handleChoosePhoto= () =>{
       })
       .then((response) => {
           let server_response = JSON.stringify(response.status);
+          // Uses response code to determine whether the chit should be published or not and display an alert message.
           if(server_response == 201)
           {
             console.log("-------- Update Made -------------");
             console.log('Server Response: '+ server_response);
             alert("Chit Photo Posted!");
-            console.log("Returned URL: "+response.url)
-            this.setState({Image_URL: response.url,Display_content: true}) // updates the Iage_URI of the posted Image so that it can be displayed.
-            console.log("Returned Image URL: "+this.state.Image_URL)
+            console.log("Returned URL: "+response.url);
+            // Updates the Iage_URI of the posted Image so that it can be displayed.
+            this.setState({Image_URL: response.url,Display_content: true});
+            console.log("Returned Image URL: "+this.state.Image_URL);
         }
         if(server_response == 404){
           alert("Not Found");
@@ -268,9 +272,6 @@ handleChoosePhoto= () =>{
           alert("Bad Request");
         }
       })
-    //  .then((response)=>{
-    //    Alert.alert("Photo Added!");
-    //  })
       .catch((error) =>{
         console.log(error);
         })
@@ -282,7 +283,7 @@ handleChoosePhoto= () =>{
 // Function is used to create and save the chit draft on the local storage, the Chit Draft Array from the Async Storage
 storeChits = async()=>{
   console.log("-----Async Post Chits ------");
-  // Stores the content of the chit on a variable
+   // Creates a chits variable using the chit content and all the values of the original chit, this will be converted into a JSON object later on.
   let chitToBeSaved = {
     chit_id:0,
     timestamp:this.state.timestamp,
@@ -300,13 +301,14 @@ storeChits = async()=>{
     // Checks to see if the Array used to store the Chit Drafts exist for the current user, if not then a new Async storage array is created.
     const newProduct =JSON.parse(await AsyncStorage.getItem(this.state.Chit_Draft_Key)) ;
     if (!newProduct) {
-      console.log("Check Existing Saved Chits: "+ newProduct)
+      console.log("Check Existing Saved Chits: "+ newProduct);
       newProduct = []
     }
 
-    console.log("Chits Array: "+ newProduct)
-    newProduct.push(chitToBeSaved)  // adds the current chit into the chit Draft array 
-    // converts the array into a JSON String Object and updates the Array on the Async Storage using the key for that array
+    console.log("Chits Array: "+ newProduct);
+     // Adds the current chit into the chit Draft array.
+    newProduct.push(chitToBeSaved);
+    // Converts the array into a JSON String Object and updates the Array on the Async Storage using the key for that array.
     await AsyncStorage.setItem(this.state.Chit_Draft_Key,JSON.stringify(newProduct)) 
     .then( ()=>{
       alert("Chit Draft Created and Saved !");
@@ -323,7 +325,7 @@ storeChits = async()=>{
 componentDidMount(){
   this.findCoordinates();
   this._retrieveTokenData();
-  this.setState({Image_URL:''});
+ // this.setState({Image_URL:''});
  }
  render(){
  return(

@@ -19,17 +19,19 @@ class LoginScreen extends Component{
 // Async function is used to store the user_ID, Token, Array to store the Saved Chit Drafts for the current user and the value that decides whether to display key content
 storeToken = async(token,user_id,display_content)=>{
   console.log("-----Async Token ------");
-  const key = user_id+'SaveChitsDrafts';  // Used to Generate a unique Chit Draft Key for all the users, this will be used to store chit Drafts in the local storage 
+  // Used to Generate a unique Chit Draft Key for all the users, this will be used to store chit Drafts in the local storage 
+  const key = user_id+'SaveChitsDrafts';
   console.log("Key for Chit Drafts:"+key )
   try{
-    await AsyncStorage.setItem('Token',token);  // Stores the Token, user_id in the Async Storage so it can be accessed throughout all the pages on the app
+    // Stores the Token, user_id in the Async Storage so it can be accessed throughout all the pages on the app
+    await AsyncStorage.setItem('Token',token);
     await AsyncStorage.setItem('key2', JSON.stringify(user_id))
     await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
 
-    // Checks to see if a Array used to store the Chit Drafts exists for the current user using the unique key,
-    // if it doesn't exist, create and store a new Array to store the Chit Drafts for the user.
+    // Checks to see if a Array used to store the Chit Drafts exists for the current user using the unique key.
+    // If it doesn't exist, create and store a new Array to store the Chit Drafts for the user.
     const retreived_chit_drafts =JSON.parse(await AsyncStorage.getItem(key));
-    if (retreived_chit_drafts == null){
+    if (retreived_chit_drafts === null){
        console.log("Key doesn't exist- Chit Draft Array doesn't Exist");
        var myArray = [];
        await AsyncStorage.setItem(key, JSON.stringify(myArray))
@@ -43,10 +45,11 @@ storeToken = async(token,user_id,display_content)=>{
   }catch(e){}
 }
 
+// Async Function is used to store the false value to hide features only available for logged in users.
 sendDisplayContentValue = async(display_content)=>{
   console.log("-----Async Token ------");
   try{
-    await AsyncStorage.setItem('display_content', JSON.stringify(display_content))
+    await AsyncStorage.setItem('display_content', JSON.stringify(display_content));
     console.log("store display_content:" +display_content);
   }catch(e){}
 }
@@ -54,7 +57,8 @@ sendDisplayContentValue = async(display_content)=>{
 // When the 'ViewChits Text is clicked, the area for user's that havent logged in is loaded.
 sendDisplay_Content()
 {
-  this.sendDisplayContentValue(false) // Used to hide the features on the action bar in the Chit's Page and the 'Follow' button from the search results in the 'Follow User's' page.
+  // Used to hide the features on the action bar in the Chit's Page and the 'Follow' button from the search results in the 'Follow User's' page.
+  this.sendDisplayContentValue(false);
   this.props.navigation.navigate('ViewChits');
 }
 
@@ -94,14 +98,17 @@ attemptLogin()
     });
       console.log("----------------------Results----------------------");
       console.log("Response Status: "+this.state.server_response)
-      if(this.state.server_response == 200)
+      // Uses the response code to decide whether the user should be given access to the main app or not.
+      if(this.state.server_response === 200)
       {
         console.log("ID: "+this.state.user_id);
         console.log("Authorization: "+ this.state.XAuthorization);
-        this.storeToken(this.state.XAuthorization, this.state.user_id,true); // Calls the Async Storage to store the returned Token and User_ID
-        this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});    // After Tokens are returned and login is successful, then the user gain access to the 'Chits' page.
+         // Calls the Async Storage to store the returned Token and User_ID
+        this.storeToken(this.state.XAuthorization, this.state.user_id,true);
+         // After Tokens are returned and login is successful, then the user gain access to the 'Chits' page.
+        this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
       }
-      if (this.state.server_response == 400){
+      if (this.state.server_response === 400){
         alert("Incorrect Email or Password, try again");
       }
   })
@@ -116,12 +123,12 @@ attemptLogin()
   <View style={{ alignContent:'center', alignSelf:'center'}}>
 
   <View style={{flexDirection:'column', alignSelf:'center', paddingTop:80}}>
-    <Text style={{color:'gray', fontSize:11, width:285, paddingTop:20}}>First Name</Text>
+    <Text style={{color:'gray', fontSize:11, width:285, paddingTop:20}}>Email</Text>
       <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8}}
           onChangeText={(value) => this.setState({Email:value})}
           value={this.state.Email}
       />
-      <Text style={{color:'gray', fontSize:11}}>Family Name</Text>
+      <Text style={{color:'gray', fontSize:11}}> Password</Text>
       <TextInput style={{ height: 40, backgroundColor:'lightgray', borderRadius:8, marginBottom:10}}
           onChangeText={(value) => this.setState({Password:value})}
           value={this.state.Password}
