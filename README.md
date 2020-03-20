@@ -30,7 +30,8 @@ There are screenshots of the application below, that show how it looks, includin
 
 ## Installation
 Before showing how to run the application, you will need to install the React Native platform on your machine. Click [Here](https://reactnative.dev/docs/getting-started) to redirect you to the instructions of how to install React Native CLI on your machine. On the link provided above, follow the instructions for the React Native CLI Quickstart.
-Before running the chitr app on your device, navigate using the command prompt to the 'myApp' folder and use the package manager [npm](https://www.npmjs.com/) to install packages below that are used by the application:
+
+Once the app has been installed, open the Command Prompt and navigate to the 'myApp' folder, then type 'npm install', this will install the node_modules for the app. After installing the node_modules, before running the chitr app on your device, check to see that all the packages used in the app are in the node_modules page and if they are skip the upcoming stage. If the packages are missing, navigate using the command prompt to the 'myApp' folder and use the package manager [npm](https://www.npmjs.com/) to install packages below that are used by the application:
 ```bash
 npm install react-native-geolocation-service
 npm install react-native-image-picker
