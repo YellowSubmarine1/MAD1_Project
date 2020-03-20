@@ -11,7 +11,10 @@ export default class FollowersScreen extends Component{
         isLoading: true,
         saved_Chits_Drafts: [],
         XAuthorization:'',
-        Chit_Draft_Key:''
+        Chit_Draft_Key:'',
+        refreshing: false,
+        seed:1,
+        page:1,
         }
     }
 
@@ -100,6 +103,10 @@ export default class FollowersScreen extends Component{
         console.log("Response Status: "+server_response)
         if(server_response == 201)
         {
+          this.setState({
+            isLoading: false,
+            refreshing: false
+          });
           console.log("-------- Update Made -------------");
           this.state.saved_Chits_Drafts.splice(index,1);
     
@@ -131,10 +138,21 @@ export default class FollowersScreen extends Component{
       */
       .catch((error) =>{
         console.log(error);
+        this.setState({isLoading:false,refreshing:false})
         })
         
     }
 
+    // Function is used to refresh the page whenever the user pulls down the gethData function is run again returning the most recent chits.
+handleRefresh=()=>{
+  this.setState({
+    page:1,
+    refreshing:true,
+    seed:this.state.seed+1
+  }, ()=>{
+    this._retrieveTokenData();
+  })
+}
    componentDidMount(){
      console.log("------- Saved Chits Drafts Page -------");
     this._retrieveTokenData();
@@ -191,6 +209,8 @@ export default class FollowersScreen extends Component{
       keyExtractor={(item, index) => {
         return item.id;
       }}
+      refreshing={this.state.refreshing}
+      onRefresh={this.handleRefresh}
     />
    </View>
   </View>

@@ -27,6 +27,9 @@ const AppTabNav = createStackNavigator ({
   Edit_Chit_Drafts:{
     screen: edit_chit_drafts
   },
+  Display_Chit_Pictures:{
+    screen: load_chit_picture
+  },
   ViewChits:{
     screen: createBottomTabNavigator({
       Chits:{
@@ -85,7 +88,7 @@ import Search_Users from './screens/Search'
 import post_chits from './screens/Post_Chits'
 //import take_pic from './screens/TakePictures'
 
-//import load_pic from './screens/Display_Image'
+import load_chit_picture from './screens/Display_Image'
 //import set_profile_pic from './screens/Set_Profile_Picture'
 
 import Search_Users_Not_Logged_In from './screens/Search_Users_Not_Logged_In'

@@ -111,6 +111,7 @@ logout_User()
     })
 }
 
+// Function is used to refresh the page whenever the user pulls down the gethData function is run again returning the most recent chits.
 handleRefresh=()=>{
   this.setState({
     page:1,
@@ -191,6 +192,9 @@ handleRefresh=()=>{
           <Icon name="md-done-all" style={styles.actionButtonIcon} />
         </ActionButton.Item>
         <ActionButton.Item buttonColor='#1abc9c' title="Saved Chit Drafts" onPress={() => this.props.navigation.navigate('Saved_Chits_Drafts')}>
+          <Icon name="md-done-all" style={styles.actionButtonIcon} />
+        </ActionButton.Item>
+        <ActionButton.Item buttonColor='#1abc9c' title="View Chit Photo" onPress={() => this.props.navigation.navigate('Display_Chit_Pictures')}>
           <Icon name="md-done-all" style={styles.actionButtonIcon} />
         </ActionButton.Item>
       </ActionButton> : null

@@ -5,7 +5,8 @@ import ImagePicker from 'react-native-image-picker';
 class HomeScreen extends Component{
 // removes the header from the page
 static navigationOptions = {
-    header: false
+    header: false,
+    headershown:true
    }
   
    constructor(props){
@@ -19,9 +20,9 @@ static navigationOptions = {
     Password:'',
     XAuthorization: '',
     chit_content:'',
-    timestamp:'',
-    longitude:'',
-    latitude:'',
+    timestamp:0,
+    longitude:0,
+    latitude:0,
     // parameters for all the features of the elements in the list
     location:[],
     locationPermission: false,
