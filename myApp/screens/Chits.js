@@ -18,7 +18,10 @@ class HomeScreen extends Component{
         Recent_Chits:[],
         user_id:'',
         XAuthorization:'',
-        Display_content: false,
+        isVisible: false,
+        refreshing: false,
+        seed:1,
+        page:1,
  
         }
     }
@@ -29,9 +32,9 @@ _retrieveTokenData = async () => {
     const value = await AsyncStorage.getItem('Token');  // retrieve the Token
     const value2 = await AsyncStorage.getItem('display_content'); // retrieves the value to Whether or not to display the Action-Bar
     if (value !== null && value2 !== null) { 
-      this.setState({XAuthorization:value,Display_content:value2});
+      this.setState({XAuthorization:value,isVisible:value2});
       console.log("Recieved Token Value is: "+this.state.XAuthorization);
-      console.log("Recieved Display Value 2 is: "+this.state.Display_content);
+      console.log("Recieved Display Value 2 is: "+this.state.isVisible);
       this.getData();
     }
   } catch (error) {
@@ -42,7 +45,7 @@ _retrieveTokenData = async () => {
 // function used to get all the Chits that have been published from the Server
   getData()
   {
-    console.log("Current Display_Content Value 1 is: "+this.state.Display_content);
+    console.log("Current Display_Content Value 1 is: "+this.state.isVisible);
     let search = "http://10.0.2.2:3333/api/v0.0.5/chits";
     console.log("All Chits:");
     console.log(search);
@@ -59,12 +62,14 @@ _retrieveTokenData = async () => {
        isLoading: false,
        Chits_List: responseJson,
        Recent_Chits: responseJson.recent_chits,
+       refreshing: false
      });
      console.log("JSON Results:");
      console.log(this.state.Chits_List);
    })
    .catch((error) =>{
-   console.log(error);
+   console.log(error); 
+  this.setState({isLoading:false,refreshing:false})
    });
    }
 
@@ -106,6 +111,15 @@ logout_User()
     })
 }
 
+handleRefresh=()=>{
+  this.setState({
+    page:1,
+    refreshing:true,
+    seed:this.state.seed+1
+  }, ()=>{
+    this.getData();
+  })
+}
  componentDidMount(){
    console.log("--------------- Chits ----------------")
    this._retrieveTokenData();
@@ -161,13 +175,15 @@ logout_User()
     keyExtractor={(item, index) => {
       return item.id;
     }}
+    refreshing={this.state.refreshing}
+    onRefresh={this.handleRefresh}
   />
 </View>
 
   {
         // Display the content in screen when state object "content" is true.
         // Hide the content in screen when state object "content" is false. 
-        this.state.Display_content ? <ActionButton buttonColor="rgba(231,76,60,1)">
+        this.state.isVisible ? <ActionButton buttonColor="rgba(231,76,60,1)">
         <ActionButton.Item buttonColor='#3498db' title="Logout" onPress={() => this.logout_User()}>
           <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
         </ActionButton.Item>

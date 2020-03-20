@@ -13,7 +13,10 @@ export default class FollowersScreen extends Component{
         User_Selected: [],
         search: '',
         user_id:'',
-        Image_URL:''
+        Image_URL:'',
+        refreshing: false,
+        seed:1,
+        page:1
         }
     }
 
@@ -31,7 +34,8 @@ export default class FollowersScreen extends Component{
        this.setState({
        isLoading: false,
        Followers_List: responseJson,
-       User_Selected: responseJson
+       User_Selected: responseJson,
+       refreshing: false
      });
      console.log("JSON Results:");
      console.log(responseJson);
@@ -39,6 +43,7 @@ export default class FollowersScreen extends Component{
    })
    .catch((error) =>{
    console.log(error);
+   this.setState({isLoading:false,refreshing:false})
    });
    }
   
@@ -94,6 +99,16 @@ export default class FollowersScreen extends Component{
     //this.Get_Image();
   };
 
+  handleRefresh=()=>{
+    this.setState({
+      page:1,
+      refreshing:true,
+      seed:this.state.seed+1
+    }, ()=>{
+      this.getData();
+    })
+  }
+
    componentDidMount(){
      console.log("------- Followers Page -------");
     this._retrieveTokenData();
@@ -137,6 +152,8 @@ export default class FollowersScreen extends Component{
         keyExtractor={(item, index) => {
           return item.id;
         }}
+        refreshing={this.state.refreshing}
+        onRefresh={this.handleRefresh}
       />
     </View>
   </View>

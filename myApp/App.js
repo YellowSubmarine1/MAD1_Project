@@ -3,12 +3,6 @@ import { createBottomTabNavigator  } from 'react-navigation-tabs';
 import { createStackNavigator  } from 'react-navigation-stack';
 
 const AppTabNav = createStackNavigator ({
- // Display_Image:{
- //  screen:load_pic
- //// },
- //  Set_Profile_Picture:{
- //  screen:set_profile_pic
- // },
    //Post_Chits:{
  //   screen:post_chits
  // },
@@ -46,9 +40,6 @@ const AppTabNav = createStackNavigator ({
       title: 'Home',
       headerShown: false
     }
-  },
-  Post_Pictures:{
-    screen:take_pic
   },
   Search_Users:{
     screen: Search_Users
@@ -92,10 +83,10 @@ import selected_User_Profile from './screens/selectedProfile'
 
 import Search_Users from './screens/Search'
 import post_chits from './screens/Post_Chits'
-import take_pic from './screens/TakePictures'
+//import take_pic from './screens/TakePictures'
 
-import load_pic from './screens/Display_Image'
-import set_profile_pic from './screens/Set_Profile_Picture'
+//import load_pic from './screens/Display_Image'
+//import set_profile_pic from './screens/Set_Profile_Picture'
 
 import Search_Users_Not_Logged_In from './screens/Search_Users_Not_Logged_In'
 import View_Chits_Not_Logged_In from './screens/View_Chits_Not_Logged_In'

@@ -20,12 +20,15 @@ static navigationOptions = {
     recent_Chits: [],
     Following:'',Followers:'',
     XAuthorization: '',
-    Image_URL:''
+    Image_URL:'',
+    refreshing: false,
+    seed:1,
+    page:1
     }
 }
 
 // Returns all the details of the selected user from the Flatlist in the Following, Chits, Followers and Search page.
-getData(id,authuorization){
+getData(){
     console.log("__________________________________");
     console.log("user_id: "+ this.state.user_id)
     let result = "http://10.0.2.2:3333/api/v0.0.5/user/"+ this.state.user_id;
@@ -50,7 +53,7 @@ getData(id,authuorization){
         email: responseJson.email,
         num_chits: responseJson.recent_chits.length,
         user_id: responseJson.user_id,
-        XAuthorization: authuorization
+        refreshing: false
       });
     
       // Calls the getFollowers & getFollowing function which returns all the followers and following list for this user_id
@@ -77,6 +80,7 @@ getData(id,authuorization){
     })
     .catch((error) =>{
     console.log(error);
+    this.setState({isLoading:false,refreshing:false})
     });
 }
 
@@ -188,17 +192,25 @@ getFollowers(){
   
         console.log("Recieved Token Value is: "+this.state.XAuthorization);
         console.log("Recieved User UD Value is: "+this.state.user_id);
-        this.getData(this.state.user_id, this.state.XAuthorization)
+        this.getData()
       }
     } catch (error) {
       // Error retrieving data
     }
   };
 
-
+  handleRefresh=()=>{
+    this.setState({
+      page:1,
+      refreshing:true,
+      seed:this.state.seed+1
+    }, ()=>{
+      this.getData();
+    })
+  }
 componentDidMount()
 {
-  //console.log("-------------------------------------------------------------------------");
+  console.log("-------------------------------------------------------------------------");
   this._retrieveTokenData();
   console.log('User_ID:'+ this.state.user_id);
   //(this.props.navigation.state.params.user_id,this.props.navigation.state.params.XAuthorization);
@@ -285,6 +297,8 @@ componentDidMount()
       keyExtractor={(item, index) => {
         return item.id;
       }}
+      refreshing={this.state.refreshing}
+      onRefresh={this.handleRefresh}
     />
    </View>
    </View>

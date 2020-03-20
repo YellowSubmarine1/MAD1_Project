@@ -211,7 +211,7 @@ Get_Image()
           <View style={{marginTop:25,alignItems:'center', paddingRight:20}}>
           <TouchableOpacity onPress={()=> this.handleChoosePhoto()}>
             <Image
-              source={{uri: this.state.image_url}}
+              source={{uri: this.state.image_url +'?' + new Date()}}
               style= {{width:210, height:180, borderRadius:25}}
             />
             </TouchableOpacity>

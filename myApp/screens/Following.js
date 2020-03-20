@@ -14,7 +14,10 @@ class Following extends Component{
         isLoading: true,
         Following_List:[],
         user_id:'',
-        XAuthorization:''
+        XAuthorization:'',
+        refreshing: false,
+        seed:1,
+        page:1
         }
     }
 
@@ -35,12 +38,14 @@ class Following extends Component{
        this.setState({
        isLoading: false,
        Following_List: responseJson,
+       refreshing: false
      });
      console.log("JSON Results:");
      console.log(responseJson);
    })
    .catch((error) =>{
    console.log(error);
+   this.setState({isLoading:false,refreshing:false})
    });
    }
   
@@ -100,6 +105,16 @@ _retrieveTokenData = async () => {
   }
   this.getData();
 };
+// Used to refresh the page whenever the user pulls down
+handleRefresh=()=>{
+  this.setState({
+    page:1,
+    refreshing:true,
+    seed:this.state.seed+1
+  }, ()=>{
+    this.getData(); // recalls the getData function to pull latest data
+  })
+}
  componentDidMount(){
    this._retrieveTokenData()
    this.getData();
@@ -152,6 +167,8 @@ _retrieveTokenData = async () => {
         keyExtractor={(item, index) => {
           return item.id;
         }}
+        refreshing={this.state.refreshing}
+        onRefresh={this.handleRefresh}
       />
     </View>
 
