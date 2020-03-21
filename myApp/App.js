@@ -83,10 +83,8 @@ import selected_User_Profile from './screens/selectedProfile'
 
 import Search_Users from './screens/Search'
 import post_chits from './screens/Post_Chits'
-//import take_pic from './screens/TakePictures'
 
 import load_chit_picture from './screens/Display_Image'
-//import set_profile_pic from './screens/Set_Profile_Picture'
 
 import Search_Users_Not_Logged_In from './screens/Search_Users_Not_Logged_In'
 import View_Chits_Not_Logged_In from './screens/View_Chits_Not_Logged_In'
