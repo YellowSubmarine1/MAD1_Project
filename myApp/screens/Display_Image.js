@@ -95,12 +95,12 @@ componentDidMount(){
     </View>
 
     <View style={{flexDirection:'column', alignSelf:'center', paddingTop:20}}>
-      <Text style={{color:'gray', fontSize:15, width:285, fontWeight:'bold', marginBottom:10}}>Posted Chit Images:</Text>
+      <Text style={{color:'gray', fontSize:15, width:285, fontWeight:'bold', marginBottom:10}}>Recently Posted Image Chits:</Text>
       <Image
                   style={{width:300, height: 300, borderRadius:15, marginBottom:20}}
                   source={{uri: "http://10.0.2.2:3333/api/v0.0.5/chits/"+this.state.user_id +"/photo" +'?' + new Date()}}
                 />
-      <Button  title="Post" onPress={() => this.postChit()} ></Button>
+      <Button  title="Back"   onPress={() => this.props.navigation.goBack()} ></Button>
     </View>
   </View>
  );

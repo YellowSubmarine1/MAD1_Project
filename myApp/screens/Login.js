@@ -99,7 +99,7 @@ attemptLogin()
       console.log("----------------------Results----------------------");
       console.log("Response Status: "+this.state.server_response)
       // Uses the response code to decide whether the user should be given access to the main app or not.
-      if(this.state.server_response === 200)
+      if(this.state.server_response == 200)
       {
         console.log("ID: "+this.state.user_id);
         console.log("Authorization: "+ this.state.XAuthorization);
@@ -108,7 +108,7 @@ attemptLogin()
          // After Tokens are returned and login is successful, then the user gain access to the 'Chits' page.
         this.props.navigation.navigate('HomePage',{user_id:this.state.user_id,XAuthorization: this.state.XAuthorization});
       }
-      if (this.state.server_response === 400){
+      if (this.state.server_response == 400){
         alert("Incorrect Email or Password, try again");
       }
   })

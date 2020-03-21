@@ -217,7 +217,7 @@ _retrieveTokenData = async () => {
 
 // Function is used to post a chit photo, it opens the image picker giving the user the option of taking a picture or selecting an image from the library which then posts the chit photo to the server and the URI of the image is returned.
 // The Posted Chit Photo is displayed.
-handleChoosePhoto= () =>{
+postImageChit= () =>{
   console.log("Button Pressed")
   const options ={
     title: 'My Pictures',
@@ -353,7 +353,7 @@ componentDidMount(){
           maxLength={141}
 
       />
-      <Button  title="Choose Photo" onPress={() => this.handleChoosePhoto()} ></Button>
+      <Button  title="Choose Photo" onPress={() => this.postImageChit()} ></Button>
       <View style={{ paddingTop:2}}>
         <Button  title="Post Chit" onPress={() => this.postChit()} ></Button>
       </View>
